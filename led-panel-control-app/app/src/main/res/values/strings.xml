@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">led-panel-control-app</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="text_title">Text</string>
+    <string name="image_title">Image</string>
+    <string name="draw_title">Drawing</string>
+    <string name="queue_title">Queue</string>
+    <string name="settings_title">Settings</string>
+    <string name="string_type_text">String type</string>
+    <string name="display_text">Display</string>
+
+    <string-array name="string_types">
+        <item>Static</item>
+        <item>Roller</item>
+        <item>Current Time</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_title">About</string>
+    <string name="enter_text_hint">Enter text...</string>
+    <string name="pick_color_text">Pick Color</string>
+    <string name="speed_format">Speed: x%s</string>
+</resources>

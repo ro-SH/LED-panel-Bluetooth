@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="textViewModel"
+            type="com.ledpanel.led_panel_control_app.ui.text.TextViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toTopOf="@id/display_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/string_type"
+                    style="@style/small_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/string_type_text" />
+
+                <Spinner
+                    android:id="@+id/string_type_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:entries="@array/string_types" />
+
+                <Button
+                    android:id="@+id/color_button"
+                    style="@style/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/pick_color_text"
+                    app:cornerRadius="@dimen/button_corner_radius"
+                    app:strokeColor="@color/gray_200"
+                    app:strokeWidth="@dimen/stroke_width" />
+
+                <EditText
+                    android:id="@+id/text_to_display"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:ems="10"
+                    android:fontFamily="@font/roboto"
+                    android:hint="@string/enter_text_hint"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName"
+                    android:text="@={textViewModel.text}"
+                    android:textColor="@color/gray_900"
+                    android:textSize="@dimen/main_text_size"
+                    android:enabled="@{textViewModel.textEditVisible}"/>
+
+                <TextView
+                    android:id="@+id/speed_text"
+                    style="@style/small_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@{@string/speed_format(textViewModel.speed.toString())}"
+                    tools:text="Speed: x1"
+                    android:enabled="@{textViewModel.speedSliderVisible}" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/speedSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="0.5"
+                    android:value="1"
+                    android:valueFrom="0.5"
+                    android:valueTo="3"
+                    app:labelBehavior="gone"
+                    app:thumbColor="@color/gray_900"
+                    app:trackColor="@color/gray_200"
+                    android:enabled="@{textViewModel.speedSliderVisible}" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/display_button"
+            style="@style/display_button_style"
+            android:onClick="@{() -> textViewModel.onDisplayClick()}"
+            android:text="@string/display_text"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

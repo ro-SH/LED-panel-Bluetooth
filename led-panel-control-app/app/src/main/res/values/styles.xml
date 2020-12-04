@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="display_button_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/display_button_height</item>
+        <item name="android:layout_marginStart">105dp</item>
+        <item name="android:layout_marginEnd">105dp</item>
+        <item name="android:layout_marginBottom">80dp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/display_button_text_color</item>
+        <item name="android:textSize">@dimen/display_button_text_size</item>
+        <item name="android:backgroundTint">@color/display_button_color</item>
+    </style>
+
+    <style name="button">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/gray_900</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+    </style>
+
+    <style name="small_text">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/gray_400</item>
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+</resources>

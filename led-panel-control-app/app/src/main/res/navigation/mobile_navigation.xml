@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_text">
+    <fragment
+        android:id="@+id/navigation_text"
+        android:name="com.ledpanel.led_panel_control_app.ui.text.TextFragment"
+        android:label="@string/text_title" >
+        <action
+            android:id="@+id/action_navigation_text_to_navigation_about"
+            app:destination="@id/navigation_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_image"
+        android:name="com.ledpanel.led_panel_control_app.ui.image.ImageFragment"
+        android:label="@string/image_title" >
+        <action
+            android:id="@+id/action_navigation_image_to_navigation_about"
+            app:destination="@id/navigation_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_draw"
+        android:name="com.ledpanel.led_panel_control_app.ui.draw.DrawFragment"
+        android:label="@string/draw_title" >
+        <action
+            android:id="@+id/action_navigation_draw_to_navigation_about"
+            app:destination="@id/navigation_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_queue"
+        android:name="com.ledpanel.led_panel_control_app.ui.queue.QueueFragment"
+        android:label="@string/queue_title" >
+        <action
+            android:id="@+id/action_navigation_queue_to_navigation_about"
+            app:destination="@id/navigation_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment"
+        android:label="@string/settings_title" >
+        <action
+            android:id="@+id/action_navigation_settings_to_navigation_about"
+            app:destination="@id/navigation_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_about"
+        android:name="com.ledpanel.led_panel_control_app.ui.about.AboutFragment"
+        android:label="@string/about_title"
+        tools:layout="@layout/fragment_about" />
+</navigation>
