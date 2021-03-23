@@ -8,11 +8,6 @@ import androidx.lifecycle.ViewModel
 
 class TextViewModel() : ViewModel() {
 
-    // Current Color HEX
-//    private val _colorHex = MutableLiveData<String>()
-//    val colorHex: LiveData<String>
-//        get() = _colorHex
-
     // Current Color Int
     private val _color = MutableLiveData<Int>()
     val color: LiveData<Int>

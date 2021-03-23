@@ -18,6 +18,11 @@ import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 
 class TextFragment : Fragment() {
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("TextFragment", "OnDestrView")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

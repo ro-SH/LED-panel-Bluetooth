@@ -16,10 +16,23 @@
         <item>Roller</item>
         <item>Current Time</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="queue_types">
+        <item>Queue</item>
+        <item>Timetable</item>
+    </string-array>
+
     <string name="about_title">About</string>
     <string name="enter_text_hint">Enter text...</string>
     <string name="pick_color_text">Pick Color</string>
     <string name="speed_format">Speed: x%s</string>
+    <string name="queue_type_text">Type</string>
+
+    <string name="hello_blank_fragment">Hello</string>
+    <string name="time_text">Time</string>
+    <string name="item_text">Item</string>
+    <string name="time_image_description">Time Image</string>
+    <string name="item_image_description">Item Image</string>
+    <string name="add_button_text">Add</string>
+    <string name="connect_bt">Connect BT</string>
 </resources>
