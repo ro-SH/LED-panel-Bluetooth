@@ -13,10 +13,13 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.ColorUtil
+import com.ledpanel.led_panel_control_app.DataTransfer
 import com.ledpanel.led_panel_control_app.R
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 
 class TextFragment : Fragment() {
+
+    private lateinit var comm: DataTransfer
 
     override fun onDestroy() {
         super.onDestroy()
@@ -30,6 +33,8 @@ class TextFragment : Fragment() {
     ): View {
 
         Log.i("TextFragment", "OnCreateView")
+
+        comm = requireActivity() as DataTransfer
 
         val binding: FragmentTextBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_text, container, false)
@@ -73,6 +78,16 @@ class TextFragment : Fragment() {
         // Speed Slider
         binding.speedSlider.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
+        }
+
+        binding.displayButton.setOnClickListener {
+            val red = Color.red(textViewModel.color.value!!)
+            val green = Color.green(textViewModel.color.value!!)
+            val blue = Color.blue(textViewModel.color.value!!)
+            val text = textViewModel.text.value
+            val data = "$red+$green+$blue+$text+|"
+            Log.i("Text", "data: $data")
+            comm.sendData(data)
         }
 
         setHasOptionsMenu(true)

@@ -1,30 +1,23 @@
 package com.ledpanel.led_panel_control_app
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.util.Log
-import android.util.SparseArray
-import androidx.annotation.IdRes
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
 import com.ledpanel.led_panel_control_app.ui.image.ImageFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
-import org.w3c.dom.Text
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communicator {
 
     private val manager = supportFragmentManager
+
+    private lateinit var btConnection: BluetoothConnection
 
     private var textFragment: Fragment? = null
     private var imageFragment: Fragment? = null
@@ -66,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 //        if(settingsFragment == null) settingsFragment = SettingsFragment()
 //        switchFragments(settingsFragment)
 //        val transaction = manager.beginTransaction()
-        if (settingsFragment == null) settingsFragment = SettingsFragment()   // *****code changed here***********
+        if (settingsFragment == null) settingsFragment = SettingsFragment()
 //        transaction.replace(R.id.nav_host_fragment, settingsFragment!!)
 //        transaction.addToBackStack(null)
 //        transaction.commit()
@@ -125,7 +118,6 @@ class MainActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment!!)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
                 .commit()
     }
 
@@ -135,7 +127,27 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.itemIconTintList = null
 
+        btConnection = BluetoothConnection(this)
+        btConnection.enableBluetoothAdapter()
+
         createTextFragment()
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
+    fun getPairedDevicesNames(): ArrayList<String> {
+        return btConnection.getPairedDevicesNames()
+    }
+
+    override fun sendDeviceId(deviceID: Int) {
+        btConnection.connectDevice(deviceID)
+    }
+
+    override fun sendData(data: String) {
+        Log.i("Main", "data: $data")
+        btConnection.sendCommand(data)
+    }
+}
+
+interface DataTransfer {
+    fun sendData(data: String)
 }
