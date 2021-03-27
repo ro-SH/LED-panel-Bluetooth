@@ -22,7 +22,6 @@ class ConnectionRequest(private val context : Context, private val eventListener
     }
 
     fun sendCommand(data: String) {
-        Log.i("Connection", "data: $data")
         connectionThread!!.sendCommand(data)
     }
 
@@ -58,7 +57,6 @@ class ConnectionRequest(private val context : Context, private val eventListener
         }
 
         fun sendCommand(data: String) {
-            Log.i("Thread", "data: $data")
             if (bluetoothSocket != null) {
                 try {
                     bluetoothSocket!!.outputStream.write(data.toByteArray())

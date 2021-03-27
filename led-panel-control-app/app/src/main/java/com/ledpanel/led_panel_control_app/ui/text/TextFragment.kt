@@ -86,7 +86,6 @@ class TextFragment : Fragment() {
             val blue = Color.blue(textViewModel.color.value!!)
             val text = textViewModel.text.value
             val data = "$red+$green+$blue+$text+|"
-            Log.i("Text", "data: $data")
             comm.sendData(data)
         }
 

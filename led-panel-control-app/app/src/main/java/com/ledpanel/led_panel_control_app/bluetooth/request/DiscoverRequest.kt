@@ -43,7 +43,7 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
 
     private fun registerReceiver() {
         context.registerReceiver(discoverReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        context.registerReceiver(discoverReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+        context.registerReceiver(discoverReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
     }
 
     private fun addDiscoveredDevice(new_device: BluetoothDevice) {
@@ -62,14 +62,27 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
         return bluetoothAdapter.getRemoteDevice(pairedDevices[deviceId].address)
     }
 
-    fun getPairedDevicesNames(): ArrayList<String> {
-        pairedDevices = mutableListOf()
-        val pairedDevicesNames: ArrayList<String> = ArrayList()
-        bluetoothAdapter.bondedDevices.forEach { device ->
-            pairedDevices.add(device)
-            pairedDevicesNames.add("${device.name}\nMAC: ${device.address}")
+    fun getDevicesNames(isPaired: Boolean): ArrayList<String> {
+        val devicesNames: ArrayList<String> = ArrayList()
+
+        when (isPaired) {
+            true -> {
+                pairedDevices = mutableListOf()
+                bluetoothAdapter.bondedDevices.forEach { device ->
+                    pairedDevices.add(device)
+                    devicesNames.add("${device.name}\nMAC: ${device.address}")
+                }
+                devicesNames.add("DISCOVER")
+            }
+
+            else -> {
+                discoveredDevices.forEach { device ->
+                    devicesNames.add("${device.name}\nMAC: ${device.address}")
+                }
+            }
         }
-        return pairedDevicesNames
+
+        return devicesNames
     }
 
     override fun cleanup() {

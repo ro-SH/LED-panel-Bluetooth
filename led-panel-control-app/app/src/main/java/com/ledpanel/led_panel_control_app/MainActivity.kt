@@ -56,60 +56,27 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
     }
 
     private fun createSettingsFragment() {
-//        if(settingsFragment == null) settingsFragment = SettingsFragment()
-//        switchFragments(settingsFragment)
-//        val transaction = manager.beginTransaction()
         if (settingsFragment == null) settingsFragment = SettingsFragment()
-//        transaction.replace(R.id.nav_host_fragment, settingsFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
         switchFragments(settingsFragment)
     }
 
     private fun createQueueFragment() {
-//        if(queueFragment == null) queueFragment = QueueFragment()
-//        switchFragments(queueFragment)
-        val transaction = manager.beginTransaction()
-        if(queueFragment == null) queueFragment = QueueFragment()   // *****code changed here***********
-        transaction.replace(R.id.nav_host_fragment, queueFragment!!)
-        transaction.addToBackStack(null)
-        transaction.commit()
-//        switchFragments(queueFragment)
+        if(queueFragment == null) queueFragment = QueueFragment()
+        switchFragments(queueFragment)
     }
 
     private fun createDrawFragment() {
-//        if(drawFragment == null) drawFragment = DrawFragment()
-//        switchFragments(drawFragment)
-//        val transaction = manager.beginTransaction()
-        if(drawFragment == null) drawFragment = DrawFragment()   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, drawFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(drawFragment == null) drawFragment = DrawFragment()
         switchFragments(drawFragment)
     }
 
     private fun createImageFragment() {
-//        if(imageFragment == null) imageFragment = ImageFragment()
-//        switchFragments(imageFragment)
-//        val transaction = manager.beginTransaction()
-        if(imageFragment == null) imageFragment = ImageFragment()   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, imageFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(imageFragment == null) imageFragment = ImageFragment()
         switchFragments(imageFragment)
     }
 
     private fun createTextFragment() {
-//        if(textFragment == null) textFragment = TextFragment()
-//        switchFragments(textFragment)
-//        val transaction = manager.beginTransaction()
-        if(textFragment == null) {
-            Log.i("Main", "TextCreated")
-            textFragment = TextFragment()
-        }   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, textFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(textFragment == null) textFragment = TextFragment()
         switchFragments(textFragment)
     }
 
@@ -134,17 +101,22 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    fun getPairedDevicesNames(): ArrayList<String> {
-        return btConnection.getPairedDevicesNames()
+    fun getDevicesNames(isPaired: Boolean): ArrayList<String> {
+        return btConnection.getDevicesNames(isPaired)
     }
 
-    override fun sendDeviceId(deviceID: Int) {
+    override fun sendDeviceId(deviceID: Int, isPaired: Boolean) {
+        if (!isPaired) btConnection.pairDevice(deviceID)
         btConnection.connectDevice(deviceID)
     }
 
     override fun sendData(data: String) {
-        Log.i("Main", "data: $data")
         btConnection.sendCommand(data)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        btConnection.cleanUp()
     }
 }
 

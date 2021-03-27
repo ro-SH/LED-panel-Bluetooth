@@ -17,7 +17,7 @@ class SettingsFragment : Fragment() {
     private lateinit var viewModel: SettingsViewModel
 
     interface Communicator {
-        fun sendDeviceId(deviceID: Int)
+        fun sendDeviceId(deviceID: Int, isPaired: Boolean)
     }
 
     private lateinit var comm: Communicator
@@ -42,13 +42,11 @@ class SettingsFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.connectButton.setOnClickListener {
+            val deviceNames = (activity as MainActivity).getDevicesNames(true).toTypedArray()
             MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Paired Bluetooth Devices")
-//                    .setItems(settingsViewModel.pairedDeviceList().toTypedArray()) { _, which ->
-//                        settingsViewModel.connectTo(which)
-//                    }
-                    .setItems((activity as MainActivity).getPairedDevicesNames().toTypedArray()) { _, which ->
-                        comm.sendDeviceId(which)
+                    .setItems(deviceNames) { _, which ->
+                        comm.sendDeviceId(which, true)
                     }
                     .show()
         }
