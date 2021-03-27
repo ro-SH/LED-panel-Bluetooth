@@ -25,8 +25,12 @@ class ConnectionRequest(private val context : Context, private val eventListener
         connectionThread!!.sendCommand(data)
     }
 
+    fun isConnected(): Boolean {
+        return connectionThread != null
+    }
+
     fun stopConnect() {
-        if (connectionThread != null)
+        if (isConnected())
             connectionThread?.cancel()
     }
 

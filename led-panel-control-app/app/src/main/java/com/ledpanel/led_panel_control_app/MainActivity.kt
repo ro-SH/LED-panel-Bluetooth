@@ -110,6 +110,13 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         btConnection.connectDevice(deviceID)
     }
 
+    override fun disconnectDevice() {
+        if (btConnection.isConnected()) {
+            btConnection.sendCommand("0+0+0+ +|")
+            btConnection.stopConnectDevice()
+        }
+    }
+
     override fun sendData(data: String) {
         btConnection.sendCommand(data)
     }

@@ -53,6 +53,10 @@ class BluetoothConnection(val context: Context) {
         connectionRequest.sendCommand(data)
     }
 
+    fun isConnected(): Boolean {
+        return connectionRequest.isConnected()
+    }
+
     fun cleanUp() {
         enableRequest.cleanup()
         discoverRequest.cleanup()
