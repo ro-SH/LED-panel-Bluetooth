@@ -72,7 +72,7 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
                     pairedDevices.add(device)
                     devicesNames.add("${device.name}\nMAC: ${device.address}")
                 }
-                devicesNames.add("DISCOVER")
+//                devicesNames.add("DISCOVER")
             }
 
             else -> {

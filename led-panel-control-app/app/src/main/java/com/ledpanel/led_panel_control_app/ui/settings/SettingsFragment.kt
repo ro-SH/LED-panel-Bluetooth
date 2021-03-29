@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +15,7 @@ import com.ledpanel.led_panel_control_app.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private lateinit var settingsViewModel: SettingsViewModel
 
     interface Communicator {
         fun sendDeviceId(deviceID: Int, isPaired: Boolean)
@@ -35,7 +36,7 @@ class SettingsFragment : Fragment() {
                 inflater, R.layout.fragment_settings, container, false)
 
         // Creating SettingsViewModel object with TextViewModelFactory
-        val settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())
+        settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())
                 .get(SettingsViewModel::class.java)
 
         binding.settingsViewModel = settingsViewModel
@@ -44,15 +45,19 @@ class SettingsFragment : Fragment() {
 
         binding.connectButton.setOnClickListener {
             val deviceNames = (activity as MainActivity).getDevicesNames(true)
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Paired Bluetooth Devices")
-                    .setItems(deviceNames.toTypedArray()) { _, which ->
-                        comm.sendDeviceId(which, true)
-                        val deviceName = deviceNames[which].substringBeforeLast("MAC: ")
-                        val deviceAddress = deviceNames[which].substringAfterLast("MAC: ")
-                        settingsViewModel.setDeviceData(deviceName, deviceAddress)
-                    }
-                    .show()
+            when (deviceNames.size) {
+                0 -> Toast.makeText(requireContext(), "No paired devices found!", Toast.LENGTH_SHORT).show()
+
+                else -> MaterialAlertDialogBuilder(requireContext())
+                        .setTitle("Paired Bluetooth Devices")
+                        .setItems(deviceNames.toTypedArray()) { _, which ->
+                            comm.sendDeviceId(which, true)
+                            val deviceName = deviceNames[which].substringBeforeLast("MAC: ")
+                            val deviceAddress = deviceNames[which].substringAfterLast("MAC: ")
+                            settingsViewModel.setDeviceData(deviceName, deviceAddress)
+                        }
+                        .show()
+            }
         }
 
         binding.disconnectButton.setOnClickListener {
