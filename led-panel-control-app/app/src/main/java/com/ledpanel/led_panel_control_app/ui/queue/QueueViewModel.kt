@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.lang.NumberFormatException
-import java.time.LocalTime
 
 class QueueViewModel : ViewModel() {
 
@@ -15,6 +14,8 @@ class QueueViewModel : ViewModel() {
 
 //    private val queue: MutableList<QueueItem> = mutableListOf() // FROM DATABASE
     private val _queue: MutableList<QueueItem> = generateList().toMutableList()
+    // TODO ADD DATABASE
+
     val queue: MutableList<QueueItem>
         get() = _queue
 
@@ -38,7 +39,6 @@ class QueueViewModel : ViewModel() {
 
 private fun checkTime(time: String): Boolean {
 
-    println(time.filter { it == ':' }.count())
     if (time.filter { it == ':' }.count() != 1)
         return false
 
