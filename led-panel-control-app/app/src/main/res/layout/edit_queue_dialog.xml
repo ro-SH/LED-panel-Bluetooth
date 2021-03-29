@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/edit_queue_dialog__header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        style="@style/queue_item_text"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    
+    <ImageView
+        android:id="@+id/edit_queue_dialog__time_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/edit_queue_dialog__header"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__time"
+        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__time"
+        android:src="@drawable/ic_time_light_24dp"/>
+    
+    <EditText
+        android:id="@+id/edit_queue_dialog__time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/edit_text_style"
+        android:layout_marginStart="24dp"
+        android:autofillHints="time"
+        android:ems="10"
+        android:hint="@string/time_text"
+        android:inputType="time"
+        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__time_image"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__header"
+        android:layout_marginTop="24dp"/>
+
+    <ImageView
+        android:id="@+id/edit_queue_dialog__item_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_item_light_24dp"
+        app:layout_constraintStart_toStartOf="@id/edit_queue_dialog__time_image"
+        app:layout_constraintEnd_toEndOf="@id/edit_queue_dialog__time_image"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__item"
+        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__item"/>
+
+    <EditText
+        android:id="@+id/edit_queue_dialog__item"
+        style="@style/edit_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="text"
+        android:ems="10"
+        android:hint="@string/item_text"
+        android:inputType="textLongMessage"
+        app:layout_constraintStart_toStartOf="@id/edit_queue_dialog__time"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__time" />
+
+    <Button
+        android:id="@+id/edit_queue_dialog__edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__item"
+        android:layout_marginTop="24dp"/>
+
+    <Space
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__time"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__item"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__edit_button"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__edit_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

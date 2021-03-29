@@ -34,6 +34,19 @@
             android:layout_marginTop="8dp"
             android:entries="@array/queue_types" />
 
+        <Button
+            android:id="@+id/fragment_queue__save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/fragment_queue__list_card"
+            app:layout_constraintBottom_toTopOf="@id/fragment_queue__list_card"
+            android:layout_marginBottom="24dp"
+            android:text="@string/save_text"
+            style="@style/button"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/fragment_queue__list_card"
             android:layout_width="match_parent"
@@ -50,19 +63,8 @@
                 android:id="@+id/fragment_queue__rv_queue_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </androidx.cardview.widget.CardView>
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/fragment_queue__rv_queue_list"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_marginTop="24dp"-->
-<!--            android:layout_marginBottom="24dp"-->
-<!--            android:layout_marginStart="24dp"-->
-<!--            android:layout_marginEnd="24dp"-->
-<!--            app:layout_constraintStart_toStartOf="@id/fragment_queue__spinner"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/fragment_queue__spinner"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/fragment_queue__add_card"/>-->
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/fragment_queue__add_card"
@@ -71,7 +73,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            app:layout_constraintStart_toStartOf="@id/fragment_queue__rv_queue_list"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@id/fragment_queue__display_button">
 
             <androidx.constraintlayout.widget.ConstraintLayout

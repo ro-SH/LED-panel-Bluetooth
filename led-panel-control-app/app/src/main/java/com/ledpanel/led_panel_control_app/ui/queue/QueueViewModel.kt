@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.lang.NumberFormatException
 
+const val QUEUE = 0
+const val TIMETABLE = 1
+
 class QueueViewModel : ViewModel() {
 
     // Current Queue Type
@@ -16,7 +19,7 @@ class QueueViewModel : ViewModel() {
     private val _queue: MutableList<QueueItem> = generateList().toMutableList()
     // TODO ADD DATABASE
 
-    val queue: MutableList<QueueItem>
+    val queue: List<QueueItem>
         get() = _queue
 
     // Sets QueueType
@@ -27,13 +30,30 @@ class QueueViewModel : ViewModel() {
 
     fun addQueueItem(newText: String, newTime: String): Boolean {
         return if (checkTime(newTime)) {
-            queue.add(
+            _queue.add(
                     QueueItem(newText, newTime)
             )
             true
         }
-        else
-            false
+        else false
+    }
+
+    fun editQueueItem(position: Int, newText: String, newTime: String): Boolean {
+        return if (checkTime(newTime)) {
+            _queue[position].text = newText
+            _queue[position].time = newTime
+            true
+        }
+        else false
+    }
+
+    fun removeItemAt(position: Int) {
+        _queue.removeAt(position)
+    }
+
+    fun save() {
+
+        // TODO: SAVE TO DATABASE
     }
 }
 
