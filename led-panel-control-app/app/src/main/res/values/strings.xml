@@ -35,6 +35,6 @@
     <string name="item_image_description">Item Image</string>
     <string name="add_button_text">Add</string>
     <string name="connect_bt">Connect BT</string>
-    <string name="save_text">Save</string>
+    <string name="clear_text">Clear</string>
     <string name="edit_text">Edit</string>
 </resources>

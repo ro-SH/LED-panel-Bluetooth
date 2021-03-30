@@ -6,19 +6,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.R
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
-import com.ledpanel.led_panel_control_app.ui.text.TextViewModel
-import com.ledpanel.led_panel_control_app.ui.text.TextViewModelFactory
+import com.ledpanel.led_panel_control_app.hideKeyboard
+
+const val QUEUE = 0
+const val TIMETABLE = 1
 
 class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
+
+    private lateinit var binding: FragmentQueueBinding
 
     private lateinit var queueViewModel: QueueViewModel
 
@@ -30,8 +32,14 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View {
 
-        val binding: FragmentQueueBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_queue, container, false)
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_queue, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Creating QueueViewModel object with QueueViewModelFactory
         queueViewModel = ViewModelProvider(this, QueueViewModelFactory())
@@ -43,21 +51,26 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         // Live Data Binding
         binding.lifecycleOwner = this
 
-        adapter = QueueAdapter(queueViewModel.queue, this)
+        adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this)
 
         binding.fragmentQueueRvQueueList.adapter = adapter
         binding.fragmentQueueRvQueueList.layoutManager = LinearLayoutManager(context)
 
-        binding.fragmentQueueSaveButton.setOnClickListener {
-            queueViewModel.save()
-            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show()
+        binding.fragmentQueueClearButton.setOnClickListener {
+            queueViewModel.clear()
+            adapter?.notifyDataSetChanged()
         }
 
-        binding.fragmentQueueSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        binding.fragmentQueueSpinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?,
+                                        position: Int, id: Long) {
                 val newPosition = parent!!.selectedItemPosition
                 if (newPosition != queueViewModel.type.value) {
                     queueViewModel.setQueueType(newPosition)
+                    setVisibility(newPosition)
+                    adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this@QueueFragment)
+                    binding.fragmentQueueRvQueueList.adapter = adapter
                     // TODO: Change Layout
                 }
             }
@@ -66,38 +79,57 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         }
 
         binding.fragmentQueueAddButton.setOnClickListener {
-            val time = binding.fragmentQueueTime.text.toString()
+            hideKeyboard()
+            val time = if (queueViewModel.type.value == QUEUE) binding.fragmentQueueTime.text.toString() else null
             val text = binding.fragmentQueueItem.text.toString()
-            if (queueViewModel.addQueueItem(text, time))
+            if (queueViewModel.addQueueItem(text, time)) {
                 adapter?.notifyDataSetChanged()
+                binding.fragmentQueueTime.setText("")
+                binding.fragmentQueueItem.setText("")
+            }
         }
+    }
 
-        return binding.root
+    private fun setVisibility(position: Int) {
+        binding.fragmentQueueTime.setVisibility(position == QUEUE)
+        binding.fragmentQueueTimeImage.setVisibility(position == QUEUE)
     }
 
     override fun onItemClick(position: Int) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.edit_queue_dialog, null)
+        val dialogView = LayoutInflater.from(context)
+                .inflate(R.layout.edit_queue_dialog, null)
+
+        dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time)
+                .setVisibility(queueViewModel.type.value == QUEUE)
+        dialogView.findViewById<ImageView>(R.id.edit_queue_dialog__time_image)
+                .setVisibility(queueViewModel.type.value == QUEUE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
                 .setView(dialogView)
 
         val alertDialog = builder.show()
 
-        val timeField = dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time)
+        val timeField = if (queueViewModel.type.value == QUEUE) dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time) else null
         val itemField = dialogView.findViewById<EditText>(R.id.edit_queue_dialog__item)
-        timeField.setText(queueViewModel.queue[position].time)
+        timeField?.setText(queueViewModel.queue[position].time)
         itemField.setText(queueViewModel.queue[position].text)
 
         dialogView.findViewById<Button>(R.id.edit_queue_dialog__edit_button).setOnClickListener {
+            hideKeyboard()
             alertDialog.dismiss()
-            if (queueViewModel.editQueueItem(position, itemField.text.toString(), timeField.text.toString()))
+            if (queueViewModel.editQueueItem(position, itemField.text.toString(), if (queueViewModel.type.value == QUEUE) timeField?.text.toString() else null))
                 adapter?.notifyItemChanged(position)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        queueViewModel.save()
     }
 
     override fun onDeleteItemClick(position: Int) {
         queueViewModel.removeItemAt(position)
         adapter?.notifyItemRemoved(position)
-        adapter?.notifyItemRangeRemoved(position, queueViewModel.queue.size)
     }
 }

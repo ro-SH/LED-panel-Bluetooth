@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.lang.NumberFormatException
 
-const val QUEUE = 0
-const val TIMETABLE = 1
-
 class QueueViewModel : ViewModel() {
 
     // Current Queue Type
@@ -25,30 +22,51 @@ class QueueViewModel : ViewModel() {
     // Sets QueueType
     fun setQueueType(newType: Int) {
         _type.value = newType
-//        setFieldsVisibility()
     }
 
-    fun addQueueItem(newText: String, newTime: String): Boolean {
-        return if (checkTime(newTime)) {
-            _queue.add(
-                    QueueItem(newText, newTime)
-            )
-            true
-        }
-        else false
+    init {
+        setQueueType(QUEUE)
     }
 
-    fun editQueueItem(position: Int, newText: String, newTime: String): Boolean {
-        return if (checkTime(newTime)) {
-            _queue[position].text = newText
-            _queue[position].time = newTime
-            true
+    fun addQueueItem(newText: String, newTime: String?): Boolean {
+        return when {
+            newTime == null -> {
+                _queue.add(
+                        QueueItem(newText, "")
+                )
+                true
+            }
+            checkTime(newTime) -> {
+                _queue.add(
+                        QueueItem(newText, newTime)
+                )
+                true
+            }
+            else -> false
         }
-        else false
+    }
+
+    fun editQueueItem(position: Int, newText: String, newTime: String?): Boolean {
+        return when {
+            newTime == null -> {
+                _queue[position].text = newText
+                true
+            }
+            checkTime(newTime) -> {
+                _queue[position].text = newText
+                _queue[position].time = newTime
+                true
+            }
+            else -> false
+        }
     }
 
     fun removeItemAt(position: Int) {
         _queue.removeAt(position)
+    }
+
+    fun clear() {
+        _queue.clear()
     }
 
     fun save() {

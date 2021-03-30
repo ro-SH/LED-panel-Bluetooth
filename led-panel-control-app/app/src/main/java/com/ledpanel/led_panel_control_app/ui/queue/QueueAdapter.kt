@@ -3,20 +3,23 @@ package com.ledpanel.led_panel_control_app.ui.queue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ledpanel.led_panel_control_app.R
 
 class QueueAdapter(
+        private val type: Int,
         private val queue: List<QueueItem>,
         private val listener: OnItemClickListener
 ) :
         RecyclerView.Adapter<QueueAdapter.QueueViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueueViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.queue_item, parent, false)
+        val view = if (type == QUEUE)
+            LayoutInflater.from(parent.context).inflate(R.layout.queue_item, parent, false)
+        else
+            LayoutInflater.from(parent.context).inflate(R.layout.timetable_item, parent, false)
         return QueueViewHolder(view)
     }
 
@@ -32,17 +35,17 @@ class QueueAdapter(
     inner class QueueViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
     View.OnClickListener {
 
-        private val tvTime: TextView = itemView.findViewById(R.id.queue_item__tv_time)
+        private val tvTime: TextView? = if (type == QUEUE) itemView.findViewById(R.id.queue_item__tv_time) else null
         private val tvText: TextView = itemView.findViewById(R.id.queue_item__tv_text)
-        private val ivDeleteButton: ImageView = itemView.findViewById(R.id.queue_item__iv_delete_button)
+        private val ibDeleteButton: ImageView = itemView.findViewById(R.id.queue_item__ib_delete_button)
 
         init {
             itemView.setOnClickListener(this)
-            ivDeleteButton.setOnClickListener(this)
+            ibDeleteButton.setOnClickListener(this)
         }
 
         fun bind(queueItem: QueueItem) {
-            tvTime.text = queueItem.time
+            tvTime?.text = queueItem.time
             tvText.text = queueItem.text
         }
 
@@ -50,7 +53,7 @@ class QueueAdapter(
             val position = adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 when (v?.id) {
-                    ivDeleteButton.id -> listener.onDeleteItemClick(position)
+                    ibDeleteButton.id -> listener.onDeleteItemClick(position)
                     else -> listener.onItemClick(position)
                 }
             }
