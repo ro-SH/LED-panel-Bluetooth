@@ -3,8 +3,12 @@ package com.ledpanel.led_panel_control_app.ui.queue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.lang.NumberFormatException
+import com.ledpanel.led_panel_control_app.checkTime
+import com.ledpanel.led_panel_control_app.generateList
 
+/**
+ *  ViewModel for the QueueFragment
+ */
 class QueueViewModel : ViewModel() {
 
     // Current Queue Type
@@ -12,22 +16,30 @@ class QueueViewModel : ViewModel() {
     val type: LiveData<Int>
         get() = _type
 
+    // Current Queue to display
 //    private val queue: MutableList<QueueItem> = mutableListOf() // FROM DATABASE
     private val _queue: MutableList<QueueItem> = generateList().toMutableList()
     // TODO ADD DATABASE
-
     val queue: List<QueueItem>
         get() = _queue
-
-    // Sets QueueType
-    fun setQueueType(newType: Int) {
-        _type.value = newType
-    }
 
     init {
         setQueueType(QUEUE)
     }
 
+    /**
+     *  Set new Queue type
+     *  @param newType New type
+     */
+    fun setQueueType(newType: Int) {
+        _type.value = newType
+    }
+
+    /**
+     *  Add new QueueItem to the back of Queue List
+     *  @param newText Text for the new QueueItem
+     *  @param newTime Time for the new QueueItem or null
+     */
     fun addQueueItem(newText: String, newTime: String?): Boolean {
         return when {
             newTime == null -> {
@@ -46,6 +58,12 @@ class QueueViewModel : ViewModel() {
         }
     }
 
+    /**
+     *  Edit QueueItem on position
+     *  @param position QueueItem ID
+     *  @param newText Text for the QueueItem
+     *  @param newTime Time for the QueueItem or null
+     */
     fun editQueueItem(position: Int, newText: String, newTime: String?): Boolean {
         return when {
             newTime == null -> {
@@ -61,52 +79,26 @@ class QueueViewModel : ViewModel() {
         }
     }
 
+    /**
+     *  Remove QueueItem on position
+     *  @param position QueueItem ID
+     */
     fun removeItemAt(position: Int) {
         _queue.removeAt(position)
     }
 
+    /**
+     *  Delete all the QueueItems in Queue
+     */
     fun clear() {
         _queue.clear()
     }
 
+    /**
+     *  Save Queue to the Database
+     */
     fun save() {
 
         // TODO: SAVE TO DATABASE
     }
-}
-
-private fun checkTime(time: String): Boolean {
-
-    if (time.filter { it == ':' }.count() != 1)
-        return false
-
-    val hrs = time.substringBefore(":")
-    val mins = time.substringAfter(":")
-
-    try {
-        if (hrs.toInt() < 0 || hrs.toInt() > 23) {
-            return false
-        }
-        if (mins.toInt() < 0 || mins.toInt() > 59) {
-            return false
-        }
-    }
-    catch (e: NumberFormatException) { return false }
-
-    return true
-}
-
-private fun generateList(): List<QueueItem> {
-    return listOf(
-            QueueItem("Погулять", "10:00"),
-            QueueItem("Какое-то действие", "11:00"),
-            QueueItem("Ещё одно", "12:22"),
-            QueueItem("Рандом", "13:00"),
-            QueueItem("Что-то", "14:00"),
-            QueueItem("Надоело", "15:00"),
-            QueueItem("Придумывать", "16:00"),
-            QueueItem("Уже", "17:00"),
-            QueueItem("Что-то очень очень длинное для проверки вместимости", "18:00"),
-            QueueItem("Ну и ещё", "19:00"),
-    )
 }

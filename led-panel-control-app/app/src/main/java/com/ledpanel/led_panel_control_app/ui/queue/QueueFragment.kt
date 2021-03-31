@@ -20,10 +20,13 @@ const val TIMETABLE = 1
 
 class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
+    // Data Binding
     private lateinit var binding: FragmentQueueBinding
 
+    // ViewModel for QueueFragment
     private lateinit var queueViewModel: QueueViewModel
 
+    // Adapter for Recycler View
     var adapter: QueueAdapter? = null
 
     override fun onCreateView(
@@ -51,6 +54,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         // Live Data Binding
         binding.lifecycleOwner = this
 
+        // Adapter for Recycler View
         adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this)
 
         binding.fragmentQueueRvQueueList.adapter = adapter
@@ -67,11 +71,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
                                         position: Int, id: Long) {
                 val newPosition = parent!!.selectedItemPosition
                 if (newPosition != queueViewModel.type.value) {
-                    queueViewModel.setQueueType(newPosition)
                     setVisibility(newPosition)
-                    adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this@QueueFragment)
-                    binding.fragmentQueueRvQueueList.adapter = adapter
-                    // TODO: Change Layout
                 }
             }
 
@@ -80,7 +80,9 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
         binding.fragmentQueueAddButton.setOnClickListener {
             hideKeyboard()
-            val time = if (queueViewModel.type.value == QUEUE) binding.fragmentQueueTime.text.toString() else null
+            val time = if (queueViewModel.type.value == QUEUE)
+                binding.fragmentQueueTime.text.toString()
+            else null
             val text = binding.fragmentQueueItem.text.toString()
             if (queueViewModel.addQueueItem(text, time)) {
                 adapter?.notifyDataSetChanged()
@@ -90,11 +92,24 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         }
     }
 
+    /**
+     *  Change Add Card and Recycler View layout based on type selected on Spinner
+     *  @param position Selected type position
+     */
     private fun setVisibility(position: Int) {
+        queueViewModel.setQueueType(position)
+
         binding.fragmentQueueTime.setVisibility(position == QUEUE)
         binding.fragmentQueueTimeImage.setVisibility(position == QUEUE)
+
+        adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this@QueueFragment)
+        binding.fragmentQueueRvQueueList.adapter = adapter
     }
 
+    /**
+     *  Show Edit dialog, change information of queue[position] and update layout
+     *  @param position Recycler View position
+     */
     override fun onItemClick(position: Int) {
         val dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.edit_queue_dialog, null)
@@ -128,6 +143,10 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         queueViewModel.save()
     }
 
+    /**
+     *  Delete item on selected position and update layout
+     *  @param position Recycler View position
+     */
     override fun onDeleteItemClick(position: Int) {
         queueViewModel.removeItemAt(position)
         adapter?.notifyItemRemoved(position)

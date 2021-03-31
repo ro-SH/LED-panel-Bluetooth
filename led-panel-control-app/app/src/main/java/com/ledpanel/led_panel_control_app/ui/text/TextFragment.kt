@@ -18,10 +18,11 @@ import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 
 class TextFragment : Fragment() {
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("TextFragment", "OnDestrView")
-    }
+    // Data Binding
+    private lateinit var binding: FragmentTextBinding
+
+    // ViewModel for TextFragment
+    private lateinit var textViewModel: TextViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +30,18 @@ class TextFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        Log.i("TextFragment", "OnCreateView")
-
-        val binding: FragmentTextBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_text, container, false)
 
+        setHasOptionsMenu(true)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         // Creating TextViewModel object with TextViewModelFactory
-        val textViewModel = ViewModelProvider(this, TextViewModelFactory())
+        textViewModel = ViewModelProvider(this, TextViewModelFactory())
             .get(TextViewModel::class.java)
 
         // Data Binding
@@ -44,6 +50,7 @@ class TextFragment : Fragment() {
         // Live Data Binding
         binding.lifecycleOwner = this
 
+        // Select Type Spinner
         binding.stringTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 textViewModel.setType(parent!!.selectedItemPosition)
@@ -57,13 +64,13 @@ class TextFragment : Fragment() {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
-                    .Builder(requireActivity()) // Pass Activity Instance
-                    .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
-                    .setDefaultColor(textViewModel.color.value!!) // Pass Default Color
-                    .setColorListener { color, _ ->
-                        textViewModel.setColor(color)
-                    }
-                    .show()
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setDefaultColor(textViewModel.color.value!!) // Pass Default Color
+                .setColorListener { color, _ ->
+                    textViewModel.setColor(color)
+                }
+                .show()
         }
 
         textViewModel.color.observe(viewLifecycleOwner, { newColor ->
@@ -74,11 +81,13 @@ class TextFragment : Fragment() {
         binding.speedSlider.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
         }
-
-        setHasOptionsMenu(true)
-        return binding.root
     }
 
+    /**
+     *  Change background color
+     *  @param button Button to change bg color
+     *  @param newColor New color for the button
+     */
     private fun setBackgroundColor(button: Button, newColor: Int) {
         if (ColorUtil.isDarkColor(newColor)) {
             button.setTextColor(Color.WHITE)
