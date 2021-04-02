@@ -7,6 +7,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 
+/**
+ *  Class for enabling Bluetooth
+ */
 class EnableRequest(private val context : Context, private val eventListener: IBluetoothEventListener): IBluetoothRequest {
 
     private var requestEnable = false
@@ -33,6 +36,9 @@ class EnableRequest(private val context : Context, private val eventListener: IB
         context.registerReceiver(enableReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
     }
 
+    /**
+     *  Enable Bluetooth
+     */
     fun enableBluetooth() {
         if (!bluetoothAdapter.isEnabled) {
             requestEnable = true
@@ -42,6 +48,9 @@ class EnableRequest(private val context : Context, private val eventListener: IB
             eventListener.onEnable()
     }
 
+    /**
+     *  Disable Bluetooth
+     */
     fun disableBluetooth() {
         bluetoothAdapter.disable()
     }

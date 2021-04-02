@@ -11,9 +11,16 @@ import java.util.*
 
 private const val BASE_UUID = "00001101-0000-1000-8000-00805F9B34FB"
 
+/**
+ *  Connect to device class
+ */
 class ConnectionRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
     private var connectionThread : ConnectionThread? = null
 
+    /**
+     *  Connect to device
+     *  @param device Bluetooth Device
+     */
     fun connect(device: BluetoothDevice) {
         eventListener.onConnecting()
         connectionThread = ConnectionThread(device)
@@ -21,30 +28,49 @@ class ConnectionRequest(private val context : Context, private val eventListener
         connectionThread?.start()
     }
 
+    /**
+     *  Send data via Bluetooth
+     *  @param data
+     */
     fun sendCommand(data: String) {
         connectionThread!!.sendCommand(data)
     }
 
+    /**
+     *  Returns if device is connected
+     */
     fun isConnected(): Boolean {
         return connectionThread != null
     }
 
+    /**
+     *  Disconnect device
+     */
     fun stopConnect() {
         if (isConnected())
             connectionThread?.cancel()
     }
 
+    /**
+     *  Close the connection
+     */
     override fun cleanup() {
         stopConnect()
     }
 
 
+    /**
+     *  Thread for bluetooth connection
+     */
     private class ConnectionThread(private val device : BluetoothDevice,
                                    private val onComplete: (isSuccess : Boolean) -> Unit) : Thread() {
 
         private var bluetoothAdapter : BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         private var bluetoothSocket : BluetoothSocket? = createSocket();
 
+        /**
+         *  Connect to device and return socket
+         */
         private fun createSocket() : BluetoothSocket? {
             var socket : BluetoothSocket? = null;
 
@@ -60,6 +86,9 @@ class ConnectionRequest(private val context : Context, private val eventListener
             return socket;
         }
 
+        /**
+         *  Send data via Bluetooth
+         */
         fun sendCommand(data: String) {
             if (bluetoothSocket != null) {
                 try {
@@ -88,6 +117,9 @@ class ConnectionRequest(private val context : Context, private val eventListener
             onComplete(isSuccess)
         }
 
+        /**
+         *  Close connection
+         */
         fun cancel() {
             if (bluetoothSocket != null)
                 bluetoothSocket?.close()

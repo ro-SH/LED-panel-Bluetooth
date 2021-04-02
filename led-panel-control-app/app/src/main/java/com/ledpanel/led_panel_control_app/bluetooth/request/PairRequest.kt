@@ -7,6 +7,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 
+/**
+ *  Class for pairing Bluetooth Device
+ */
 class PairRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
 
     private var isPairing = false
@@ -29,6 +32,10 @@ class PairRequest(private val context : Context, private val eventListener: IBlu
         registerReceiver()
     }
 
+    /**
+     *  Pair Bluetooth Device
+     *  @param device
+     */
     fun pair(device : BluetoothDevice) {
         if (isPairing)
             return

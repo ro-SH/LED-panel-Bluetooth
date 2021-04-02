@@ -17,8 +17,10 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
 
     private val manager = supportFragmentManager
 
+    // Bluetooth Connection
     private lateinit var btConnection: BluetoothConnection
 
+    // Fragments
     private var textFragment: Fragment? = null
     private var imageFragment: Fragment? = null
     private var drawFragment: Fragment? = null
@@ -55,31 +57,50 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         return@OnNavigationItemSelectedListener false
     }
 
+    /**
+     *  Create SettingsFragment instance if not created. Switch to SettingsFragment.
+     */
     private fun createSettingsFragment() {
         if (settingsFragment == null) settingsFragment = SettingsFragment()
         switchFragments(settingsFragment)
     }
 
+    /**
+     *  Create QueueFragment instance if not created. Switch to QueueFragment.
+     */
     private fun createQueueFragment() {
         if(queueFragment == null) queueFragment = QueueFragment()
         switchFragments(queueFragment)
     }
 
+    /**
+     *  Create DrawFragment instance if not created. Switch to DrawFragment.
+     */
     private fun createDrawFragment() {
         if(drawFragment == null) drawFragment = DrawFragment()
         switchFragments(drawFragment)
     }
 
+    /**
+     *  Create ImageFragment instance if not created. Switch to ImageFragment.
+     */
     private fun createImageFragment() {
         if(imageFragment == null) imageFragment = ImageFragment()
         switchFragments(imageFragment)
     }
 
+    /**
+     *  Create TextFragment instance if not created. Switch to TextFragment.
+     */
     private fun createTextFragment() {
         if(textFragment == null) textFragment = TextFragment()
         switchFragments(textFragment)
     }
 
+    /**
+     *  Switch to new Fragment
+     *  @param fragment New fragment to show
+     */
     private fun switchFragments(fragment: Fragment?) {
         manager
                 .beginTransaction()
@@ -101,15 +122,28 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+    /**
+     *  Get ArrayList of Paired or Discovered Devices
+     *  @param isPaired 'true' if paired devices
+     *  @return ArrayList of Paired or Discovered Devices
+     */
     fun getDevicesNames(isPaired: Boolean): ArrayList<String> {
         return btConnection.getDevicesNames(isPaired)
     }
 
+    /**
+     *  Connect to device
+     *  @param deviceID Device ID in the list of devices
+     *  @param isPaired 'true' if paired devices
+     */
     override fun sendDeviceId(deviceID: Int, isPaired: Boolean) {
         if (!isPaired) btConnection.pairDevice(deviceID)
         btConnection.connectDevice(deviceID)
     }
 
+    /**
+     *  Disconnect from current device
+     */
     override fun disconnectDevice() {
         if (btConnection.isConnected()) {
             btConnection.sendCommand("0+0+0+ +|")
@@ -117,6 +151,10 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         }
     }
 
+    /**
+     *  Transfer data via Bluetooth
+     *  @param data
+     */
     override fun sendData(data: String) {
         btConnection.sendCommand(data)
     }
@@ -127,6 +165,9 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
     }
 }
 
+/**
+ *  Interface for transferring data Via Bluetooth
+ */
 interface DataTransfer {
     fun sendData(data: String)
 }

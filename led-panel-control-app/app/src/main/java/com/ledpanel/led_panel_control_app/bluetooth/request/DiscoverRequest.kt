@@ -8,10 +8,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 
+/**
+ *  Class for discovering new devices
+ */
 class DiscoverRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest  {
 
+    // List of discovered devices
     private var discoveredDevices:MutableList<BluetoothDevice> = mutableListOf()
+
+    // List of paired devices
     private var pairedDevices: MutableList<BluetoothDevice> = mutableListOf()
+
     private var bluetoothAdapter : BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
     private val discoverReceiver = object : BroadcastReceiver() {
@@ -31,6 +38,9 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
         registerReceiver()
     }
 
+    /**
+     *  Start discovering devices
+     */
     fun discover() {
         discoveredDevices = mutableListOf()
 
@@ -46,6 +56,10 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
         context.registerReceiver(discoverReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
     }
 
+    /**
+     *  Add device to discovered devices
+     *  @param new_device
+     */
     private fun addDiscoveredDevice(new_device: BluetoothDevice) {
         if (new_device.bondState != BluetoothDevice.BOND_BONDED)
             return
@@ -62,6 +76,10 @@ class DiscoverRequest(private val context : Context, private val eventListener: 
         return bluetoothAdapter.getRemoteDevice(pairedDevices[deviceId].address)
     }
 
+    /**
+     *  Get list of devices data
+     *  @param 'true' if list of paired devices
+     */
     fun getDevicesNames(isPaired: Boolean): ArrayList<String> {
         val devicesNames: ArrayList<String> = ArrayList()
 
