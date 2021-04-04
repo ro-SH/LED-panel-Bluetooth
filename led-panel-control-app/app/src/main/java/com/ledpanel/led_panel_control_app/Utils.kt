@@ -1,5 +1,8 @@
 package com.ledpanel.led_panel_control_app
 
+import android.graphics.Color
+import android.widget.Button
+import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import java.lang.NumberFormatException
 
@@ -45,4 +48,18 @@ fun generateList(): List<QueueItem> {
         QueueItem("Что-то очень очень длинное для проверки вместимости", "18:00"),
         QueueItem("Ну и ещё", "19:00"),
     )
+}
+
+/**
+ *  Change background color
+ *  @param button Button to change bg color
+ *  @param newColor New color for the button
+ */
+fun setBackgroundColor(button: Button, newColor: Int) {
+    if (ColorUtil.isDarkColor(newColor)) {
+        button.setTextColor(Color.WHITE)
+    } else {
+        button.setTextColor(Color.BLACK)
+    }
+    button.setBackgroundColor(newColor)
 }

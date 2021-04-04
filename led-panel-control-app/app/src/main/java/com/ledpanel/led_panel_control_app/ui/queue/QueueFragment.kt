@@ -60,10 +60,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         binding.fragmentQueueRvQueueList.adapter = adapter
         binding.fragmentQueueRvQueueList.layoutManager = LinearLayoutManager(context)
 
-        binding.fragmentQueueClearButton.setOnClickListener {
-            queueViewModel.clear()
-            adapter?.notifyDataSetChanged()
-        }
+        binding.fragmentQueueClearButton.setOnClickListener { onClearButtonClicked() }
 
         binding.fragmentQueueSpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
@@ -78,17 +75,37 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
-        binding.fragmentQueueAddButton.setOnClickListener {
+        binding.fragmentQueueAddButton.setOnClickListener { onAddButtonClicked() }
+
+        binding.fragmentQueueDisplayButton.setOnClickListener {
             hideKeyboard()
-            val time = if (queueViewModel.type.value == QUEUE)
-                binding.fragmentQueueTime.text.toString()
-            else null
-            val text = binding.fragmentQueueItem.text.toString()
-            if (queueViewModel.addQueueItem(text, time)) {
-                adapter?.notifyDataSetChanged()
-                binding.fragmentQueueTime.setText("")
-                binding.fragmentQueueItem.setText("")
-            }
+            // TODO: CHECK AND SEND DATA
+        }
+    }
+
+    /**
+     *  Called when the clear button is pressed.
+     *  Clear the queue and the recycler view.
+     */
+    private fun onClearButtonClicked() {
+        queueViewModel.clear()
+        adapter?.notifyDataSetChanged()
+    }
+
+    /**
+     *  Called when the add button is pressed.
+     *  Add new Item to the queue if valid.
+     */
+    private fun onAddButtonClicked() {
+        hideKeyboard()
+        val time = if (queueViewModel.type.value == QUEUE)
+            binding.fragmentQueueTime.text.toString()
+        else null
+        val text = binding.fragmentQueueItem.text.toString()
+        if (queueViewModel.addQueueItem(text, time)) {
+            adapter?.notifyDataSetChanged()
+            binding.fragmentQueueTime.setText("")
+            binding.fragmentQueueItem.setText("")
         }
     }
 

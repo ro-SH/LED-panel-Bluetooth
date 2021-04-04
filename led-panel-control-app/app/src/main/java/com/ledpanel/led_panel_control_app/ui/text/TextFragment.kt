@@ -15,6 +15,7 @@ import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.ledpanel.led_panel_control_app.R
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
+import com.ledpanel.led_panel_control_app.setBackgroundColor
 
 class TextFragment : Fragment() {
 
@@ -81,20 +82,6 @@ class TextFragment : Fragment() {
         binding.speedSlider.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
         }
-    }
-
-    /**
-     *  Change background color
-     *  @param button Button to change bg color
-     *  @param newColor New color for the button
-     */
-    private fun setBackgroundColor(button: Button, newColor: Int) {
-        if (ColorUtil.isDarkColor(newColor)) {
-            button.setTextColor(Color.WHITE)
-        } else {
-            button.setTextColor(Color.BLACK)
-        }
-        button.setBackgroundColor(newColor)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
