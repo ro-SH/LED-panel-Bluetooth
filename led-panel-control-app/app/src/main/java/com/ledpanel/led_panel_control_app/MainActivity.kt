@@ -1,31 +1,25 @@
 package com.ledpanel.led_panel_control_app
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
-import android.util.Log
-import android.util.SparseArray
-import androidx.annotation.IdRes
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
 import com.ledpanel.led_panel_control_app.ui.image.ImageFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
-import org.w3c.dom.Text
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communicator {
 
     private val manager = supportFragmentManager
 
+    // Bluetooth Connection
+    private lateinit var btConnection: BluetoothConnection
+
+    // Fragments
     private var textFragment: Fragment? = null
     private var imageFragment: Fragment? = null
     private var drawFragment: Fragment? = null
@@ -62,70 +56,55 @@ class MainActivity : AppCompatActivity() {
         return@OnNavigationItemSelectedListener false
     }
 
+    /**
+     *  Create SettingsFragment instance if not created. Switch to SettingsFragment.
+     */
     private fun createSettingsFragment() {
-//        if(settingsFragment == null) settingsFragment = SettingsFragment()
-//        switchFragments(settingsFragment)
-//        val transaction = manager.beginTransaction()
-        if (settingsFragment == null) settingsFragment = SettingsFragment()   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, settingsFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if (settingsFragment == null) settingsFragment = SettingsFragment()
         switchFragments(settingsFragment)
     }
 
+    /**
+     *  Create QueueFragment instance if not created. Switch to QueueFragment.
+     */
     private fun createQueueFragment() {
-//        if(queueFragment == null) queueFragment = QueueFragment()
-//        switchFragments(queueFragment)
-        val transaction = manager.beginTransaction()
-        if(queueFragment == null) queueFragment = QueueFragment()   // *****code changed here***********
-        transaction.replace(R.id.nav_host_fragment, queueFragment!!)
-        transaction.addToBackStack(null)
-        transaction.commit()
-//        switchFragments(queueFragment)
+        if(queueFragment == null) queueFragment = QueueFragment()
+        switchFragments(queueFragment)
     }
 
+    /**
+     *  Create DrawFragment instance if not created. Switch to DrawFragment.
+     */
     private fun createDrawFragment() {
-//        if(drawFragment == null) drawFragment = DrawFragment()
-//        switchFragments(drawFragment)
-//        val transaction = manager.beginTransaction()
-        if(drawFragment == null) drawFragment = DrawFragment()   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, drawFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(drawFragment == null) drawFragment = DrawFragment()
         switchFragments(drawFragment)
     }
 
+    /**
+     *  Create ImageFragment instance if not created. Switch to ImageFragment.
+     */
     private fun createImageFragment() {
-//        if(imageFragment == null) imageFragment = ImageFragment()
-//        switchFragments(imageFragment)
-//        val transaction = manager.beginTransaction()
-        if(imageFragment == null) imageFragment = ImageFragment()   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, imageFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(imageFragment == null) imageFragment = ImageFragment()
         switchFragments(imageFragment)
     }
 
+    /**
+     *  Create TextFragment instance if not created. Switch to TextFragment.
+     */
     private fun createTextFragment() {
-//        if(textFragment == null) textFragment = TextFragment()
-//        switchFragments(textFragment)
-//        val transaction = manager.beginTransaction()
-        if(textFragment == null) {
-            Log.i("Main", "TextCreated")
-            textFragment = TextFragment()
-        }   // *****code changed here***********
-//        transaction.replace(R.id.nav_host_fragment, textFragment!!)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        if(textFragment == null) textFragment = TextFragment()
         switchFragments(textFragment)
     }
 
+    /**
+     *  Switch to new Fragment
+     *  @param fragment New fragment to show
+     */
     private fun switchFragments(fragment: Fragment?) {
         manager
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment!!)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
                 .commit()
     }
 
@@ -135,7 +114,60 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.itemIconTintList = null
 
-        createTextFragment()
+        btConnection = BluetoothConnection(this)
+        btConnection.enableBluetoothAdapter()
+
+        if (savedInstanceState == null)
+            createTextFragment()
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
+    /**
+     *  Get ArrayList of Paired or Discovered Devices
+     *  @param isPaired 'true' if paired devices
+     *  @return ArrayList of Paired or Discovered Devices
+     */
+    fun getDevicesNames(isPaired: Boolean): ArrayList<String> {
+        return btConnection.getDevicesNames(isPaired)
+    }
+
+    /**
+     *  Connect to device
+     *  @param deviceID Device ID in the list of devices
+     *  @param isPaired 'true' if paired devices
+     */
+    override fun sendDeviceId(deviceID: Int, isPaired: Boolean) {
+        if (!isPaired) btConnection.pairDevice(deviceID)
+        btConnection.connectDevice(deviceID)
+    }
+
+    /**
+     *  Disconnect from current device
+     */
+    override fun disconnectDevice() {
+        if (btConnection.isConnected()) {
+            btConnection.sendCommand("0+0+0+ +|")
+            btConnection.stopConnectDevice()
+        }
+    }
+
+    /**
+     *  Transfer data via Bluetooth
+     *  @param data
+     */
+    override fun sendData(data: String) {
+        btConnection.sendCommand(data)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        btConnection.cleanUp()
+    }
+}
+
+/**
+ *  Interface for transferring data Via Bluetooth
+ */
+interface DataTransfer {
+    fun sendData(data: String)
 }

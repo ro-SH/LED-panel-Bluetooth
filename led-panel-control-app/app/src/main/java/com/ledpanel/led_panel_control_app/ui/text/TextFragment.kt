@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.ColorUtil
+import com.ledpanel.led_panel_control_app.DataTransfer
 import com.ledpanel.led_panel_control_app.R
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 import com.ledpanel.led_panel_control_app.setBackgroundColor
@@ -25,6 +26,8 @@ class TextFragment : Fragment() {
     // ViewModel for TextFragment
     private lateinit var textViewModel: TextViewModel
 
+    private lateinit var comm: DataTransfer
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,7 +35,7 @@ class TextFragment : Fragment() {
     ): View {
 
         binding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_text, container, false)
+                inflater, R.layout.fragment_text, container, false)
 
         setHasOptionsMenu(true)
         return binding.root
@@ -40,6 +43,8 @@ class TextFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        comm = requireActivity() as DataTransfer
 
         // Creating TextViewModel object with TextViewModelFactory
         textViewModel = ViewModelProvider(this, TextViewModelFactory())
@@ -61,7 +66,7 @@ class TextFragment : Fragment() {
         }
 
         // Color Button
-        binding.colorButton.setOnClickListener { _ ->
+        binding.colorButton.setOnClickListener {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
@@ -81,6 +86,15 @@ class TextFragment : Fragment() {
         // Speed Slider
         binding.speedSlider.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
+        }
+
+        binding.displayButton.setOnClickListener {
+            val red = Color.red(textViewModel.color.value!!)
+            val green = Color.green(textViewModel.color.value!!)
+            val blue = Color.blue(textViewModel.color.value!!)
+            val text = textViewModel.text.value
+            val data = "$red+$green+$blue+$text+|"
+            comm.sendData(data)
         }
     }
 

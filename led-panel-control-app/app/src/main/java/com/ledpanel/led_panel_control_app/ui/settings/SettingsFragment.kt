@@ -1,72 +1,95 @@
 package com.ledpanel.led_panel_control_app.ui.settings
 
-import android.bluetooth.BluetoothSocket
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.ledpanel.led_panel_control_app.MainActivity
 import com.ledpanel.led_panel_control_app.R
 import com.ledpanel.led_panel_control_app.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
-    private lateinit var viewModel: SettingsViewModel
+    // Data binding
+    private lateinit var binding: FragmentSettingsBinding
 
-    interface OnFragmentSendBluetoothDataListener {
-        fun onSendBluetoothData(m_bluetoothSocket: BluetoothSocket?)
-    }
+    // ViewModel for SettingsFragment
+    private lateinit var settingsViewModel: SettingsViewModel
 
-    private lateinit var fragmentSendBluetoothDataListener: OnFragmentSendBluetoothDataListener
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            fragmentSendBluetoothDataListener = context as OnFragmentSendBluetoothDataListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context должен реализовывать интерфейс OnFragmentSendBluetoothDataListener")
-        }
-    }
+    // Communicator to MainActivity
+    private lateinit var comm: Communicator
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
+        comm = requireActivity() as Communicator
 
-
-        val binding: FragmentSettingsBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_settings, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         // Creating SettingsViewModel object with TextViewModelFactory
-        val settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())
-                .get(SettingsViewModel::class.java)
+        settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())
+            .get(SettingsViewModel::class.java)
 
         binding.settingsViewModel = settingsViewModel
 
         binding.lifecycleOwner = this
 
+        // Connect Button
         binding.connectButton.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Bluetooth Devices")
-                    .setItems(settingsViewModel.pairedDeviceList().toTypedArray()) { _, which ->
-                        settingsViewModel.connectTo(which)
+
+            // List of device names
+            val deviceNames = (activity as MainActivity).getDevicesNames(true)
+            when (deviceNames.size) {
+                0 -> Toast.makeText(requireContext(), "No paired devices found!", Toast.LENGTH_SHORT).show()
+
+                else -> MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Paired Bluetooth Devices")
+                    .setItems(deviceNames.toTypedArray()) { _, which ->
+                        comm.sendDeviceId(which, true)
+                        val deviceName = deviceNames[which].substringBeforeLast("MAC: ")
+                        val deviceAddress = deviceNames[which].substringAfterLast("MAC: ")
+                        settingsViewModel.setDeviceData(deviceName, deviceAddress)
                     }
                     .show()
+            }
         }
 
-        return binding.root
+        // disconnect Button
+        binding.disconnectButton.setOnClickListener {
+            comm.disconnectDevice()
+            settingsViewModel.deleteDeviceData()
+        }
     }
 
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
-//        // TODO: Use the ViewModel
-//    }
+    /**
+     *  Interface for transferring data to MainActivity
+     */
+    interface Communicator {
+        /**
+         *  Transfer Device Id to MainActivity
+         *  @param deviceID
+         *  @param isPaired 'true' if device is paired
+         */
+        fun sendDeviceId(deviceID: Int, isPaired: Boolean)
 
+        /**
+         *  Transfer disconnect device signal
+         */
+        fun disconnectDevice()
+    }
 }
