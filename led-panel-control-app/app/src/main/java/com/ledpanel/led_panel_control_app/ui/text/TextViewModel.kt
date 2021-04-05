@@ -74,5 +74,6 @@ class TextViewModel() : ViewModel() {
     // Transfer Data to Panel
     fun onDisplayClick() {
         Log.i("TextViewModel", "type ${type.value}")
+
     }
 }

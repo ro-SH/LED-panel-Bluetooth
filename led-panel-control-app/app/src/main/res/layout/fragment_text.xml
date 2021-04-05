@@ -99,12 +99,13 @@
         <Button
             android:id="@+id/display_button"
             style="@style/display_button_style"
-            android:onClick="@{() -> textViewModel.onDisplayClick()}"
             android:text="@string/display_text"
             app:cornerRadius="@dimen/button_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            />
+<!--        android:onClick="@{() -> textViewModel.onDisplayClick()}"-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
