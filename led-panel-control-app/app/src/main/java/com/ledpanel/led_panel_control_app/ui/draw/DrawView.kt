@@ -13,28 +13,37 @@ import kotlin.math.abs
 // Stroke width for the the paint.
 private const val STROKE_WIDTH = 1f
 
+// Drawing modes
 const val ERASE = 0
 const val DRAW = 1
 
+/**
+ *  View for drawing on a pixel matrix
+ *  @param context
+ *  @param rows Number of rows
+ *  @param cols Number of cols
+ *  @param drawColor Current color
+ */
 class DrawView(context: Context,
                private var rows: Int = 8,
                private var cols: Int = 32,
                private var drawColor: Int = Color.WHITE
 ) : View(context) {
 
-    private var path = Path()
-
     private val gridColor = Color.WHITE
     private val bgColor = ResourcesCompat.getColor(resources, R.color.gray_900, null)
     private lateinit var extraCanvas: Canvas
     private lateinit var extraBitmap: Bitmap
 
+    // Pixel Size
     private var pixelWidth: Int? = null
     private var pixelHeight: Int? = null
 
+    // Current position
     private var currentX = 0F
     private var currentY = 0F
 
+    // Current drawing mode
     private var drawMode = DRAW
 
     // Set up the paint with which to draw.
@@ -50,36 +59,62 @@ class DrawView(context: Context,
         strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
     }
 
+    /**
+     *  Set new draw mode
+     *  @param mode
+     */
     fun setDrawMode(mode: Int) {
         if (mode == ERASE || mode == DRAW)
             drawMode = mode
     }
 
+    /**
+     *  Set new draw color
+     *  @param newColor
+     */
     fun setDrawColor(newColor: Int) {
         drawColor = newColor
     }
 
+    /**
+     *  Fill the matrix with current color or background color
+     *  @param fillColor 'true' if current color
+     */
     fun fill(fillColor: Boolean = false) {
-        if (::extraBitmap.isInitialized) extraBitmap.recycle()
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraCanvas = Canvas(extraBitmap)
         when (fillColor) {
             true -> extraCanvas.drawColor(drawColor)
             else -> extraCanvas.drawColor(bgColor)
         }
-        drawGrid()
+
+        // Bold Grid
+        for (i in 1..3)
+            drawGrid()
 
         invalidate()
     }
 
+    /**
+     * Called whenever the view changes size.
+     * Also called after view has been inflated and has a valid size.
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
-        fill()
+        if (::extraBitmap.isInitialized) extraBitmap.recycle()
+        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        extraCanvas = Canvas(extraBitmap)
+
         pixelWidth = (extraCanvas.width - cols + 1) / cols
         pixelHeight = (extraCanvas.height - rows + 1) / rows
+
+        fill()
     }
 
+    /**
+     * Drawing.
+     *
+     * @param canvas the canvas on which the background will be drawn
+     */
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -87,7 +122,11 @@ class DrawView(context: Context,
         canvas?.drawBitmap(extraBitmap, 0f, 0f, null)
     }
 
+    /**
+     *  Draw the grid
+     */
     private fun drawGrid() {
+        // Horizontal
         for (line in 1 until rows)
             extraCanvas.drawLine(
                     0F,
@@ -96,7 +135,7 @@ class DrawView(context: Context,
                     (extraCanvas.height / rows * line).toFloat(),
                     paint
             )
-
+        // Vertical
         for (line in 1 until cols)
             extraCanvas.drawLine(
                     (extraCanvas.width / cols * line).toFloat(),
@@ -108,8 +147,7 @@ class DrawView(context: Context,
     }
 
     /**
-     * No need to call and implement MyCanvasView#performClick, because MyCanvasView custom view
-     * does not handle click actions.
+     * Called whenever the user touches the view
      */
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -123,6 +161,9 @@ class DrawView(context: Context,
         return true
     }
 
+    /**
+     *  Fill the pixel with current color
+     */
     private fun fillPixel() {
         if (extraCanvas.width % currentX == 0F || extraCanvas.height % currentY == 0F)
             return
@@ -130,13 +171,28 @@ class DrawView(context: Context,
         val pixelX: Int = (currentX / (pixelWidth!! + 1)).toInt()
         val pixelY: Int = (currentY / (pixelHeight!! + 1)).toInt()
 
-        val startX = pixelX * (pixelWidth!! + 1)
-        val startY = pixelY * (pixelHeight!! + 1)
-        val rect = Rect(
-                startX,
-                startY,
-                startX + pixelWidth!!,
-                startY + pixelHeight!!)
+        val startX = when (pixelX) {
+            cols -> (pixelX - 1) * (pixelWidth!! + 1)
+            else -> pixelX * (pixelWidth!! + 1)
+        }
+
+        val startY = when (pixelY) {
+            rows -> (pixelY - 1) * (pixelHeight!! + 1)
+            else -> pixelY * (pixelHeight!! + 1)
+        }
+
+        val endX = when (pixelX) {
+            cols -> extraCanvas.width
+            cols - 1 -> extraCanvas.width
+            else -> startX + pixelWidth!!
+        }
+
+        val endY = when (pixelY) {
+            rows -> extraCanvas.height
+            rows - 1 -> extraCanvas.height
+            else -> startY + pixelHeight!!
+        }
+        val rect = Rect(startX, startY, endX, endY)
 
         when (drawMode) {
             DRAW -> {
@@ -157,6 +213,8 @@ class DrawView(context: Context,
                 )
             }
         }
+
+        drawGrid()
 
         invalidate()
     }

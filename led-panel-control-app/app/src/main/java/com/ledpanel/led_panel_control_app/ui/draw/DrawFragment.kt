@@ -47,8 +47,10 @@ class DrawFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // ViewModel for DrawFragment
         viewModel = ViewModelProvider(this).get(DrawViewModel::class.java)
 
+        // View for drawing on screen
         drawView = DrawView(requireContext(), HEIGHT, WIDTH, viewModel.color.value!!)
 
         drawView.layoutParams = ViewGroup.LayoutParams(
@@ -56,7 +58,7 @@ class DrawFragment : Fragment() {
                 ViewGroup.LayoutParams.MATCH_PARENT
         )
 
-        view.findViewById<LinearLayout>(R.id.fragment_draw__canvas_layout).addView(drawView)
+        binding.fragmentDrawCanvasLayout.addView(drawView)
 
         // Color Button
         binding.fragmentDrawColorButton.setOnClickListener { _ ->
@@ -77,20 +79,16 @@ class DrawFragment : Fragment() {
             setBackgroundColor(binding.fragmentDrawColorButton, newColor)
         })
 
-        binding.fragmentDrawIbClear.setOnClickListener {
-            drawView.fill()
-        }
+        // Clear Button
+        binding.fragmentDrawIbClear.setOnClickListener { drawView.fill() }
 
-        binding.fragmentDrawIbFill.setOnClickListener {
-            drawView.fill(true)
-        }
+        // Fill Button
+        binding.fragmentDrawIbFill.setOnClickListener { drawView.fill(true) }
 
-        binding.fragmentDrawIbDraw.setOnClickListener {
-            drawView.setDrawMode(DRAW)
-        }
+        // Draw Button
+        binding.fragmentDrawIbDraw.setOnClickListener { drawView.setDrawMode(DRAW) }
 
-        binding.fragmentDrawIbErase.setOnClickListener {
-            drawView.setDrawMode(ERASE)
-        }
+        // Erase Button
+        binding.fragmentDrawIbErase.setOnClickListener { drawView.setDrawMode(ERASE) }
     }
 }
