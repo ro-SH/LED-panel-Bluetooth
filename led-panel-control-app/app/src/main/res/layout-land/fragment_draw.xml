@@ -11,9 +11,7 @@
             android:id="@+id/fragment_draw__cv_canvas"
             android:layout_width="420dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="80dp"
+            android:layout_margin="24dp"
             app:layout_constraintDimensionRatio="1:4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

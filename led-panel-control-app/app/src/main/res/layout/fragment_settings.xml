@@ -55,7 +55,7 @@
             android:id="@+id/disconnect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/disconnect_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

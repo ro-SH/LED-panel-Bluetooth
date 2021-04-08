@@ -6,7 +6,7 @@
         <item name="android:layout_height">@dimen/display_button_height</item>
         <item name="android:layout_marginStart">105dp</item>
         <item name="android:layout_marginEnd">105dp</item>
-        <item name="android:layout_marginBottom">80dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textColor">@color/display_button_text_color</item>
         <item name="android:textSize">@dimen/display_button_text_size</item>
