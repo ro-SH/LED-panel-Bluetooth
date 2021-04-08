@@ -40,4 +40,6 @@
     <string name="edit_text">Edit</string>
 
     <string name="disconnect_bt">Disconnect</string>
+    <string name="add_text">Add</string>
+    <string name="skip_text">Skip</string>
 </resources>
