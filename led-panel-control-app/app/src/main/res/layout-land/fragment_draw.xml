@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/fragment_draw__cv_canvas"
+            android:layout_width="420dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="80dp"
+            app:layout_constraintDimensionRatio="1:4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/fragment_draw__canvas_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/fragment_draw__color_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_color_text"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__cv_canvas"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_draw"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__ib_fill"
+            app:layout_constraintEnd_toEndOf="@+id/fragment_draw__ib_erase"
+            app:layout_constraintStart_toStartOf="@+id/fragment_draw__ib_erase"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__ib_fill" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_erase"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/fragment_draw__cv_canvas"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__ib_clear" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_fill"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintEnd_toEndOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__cv_canvas" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_clear"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/fragment_draw__ib_erase"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_draw__ib_fill" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
