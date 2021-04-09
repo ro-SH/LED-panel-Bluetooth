@@ -1,10 +1,21 @@
 package com.ledpanel.led_panel_control_app
 
 import android.graphics.Color
+import android.os.Build
 import android.widget.Button
 import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import java.lang.NumberFormatException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+
+// Descriptions
+const val aboutText = "Text description"
+const val aboutDraw = "Draw description"
+const val aboutQueue = "Queue description"
+const val aboutSettings = "Settings description"
 
 /**
  *  @param time
@@ -48,6 +59,22 @@ fun generateList(): List<QueueItem> {
         QueueItem("Что-то очень очень длинное для проверки вместимости", "18:00"),
         QueueItem("Ну и ещё", "19:00"),
     )
+}
+
+/**
+ *  Get current date and time
+ *  @return String of date and time
+ */
+fun getCurrentTime(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+        current.format(formatter)
+    } else {
+        val date = Date()
+        val formatter = SimpleDateFormat("MMM dd yyyy HH:mma")
+        formatter.format(date)
+    }
 }
 
 /**

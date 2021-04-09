@@ -1,6 +1,7 @@
 package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
+import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +14,17 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.ColorUtil
-import com.ledpanel.led_panel_control_app.DataTransfer
-import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
-import com.ledpanel.led_panel_control_app.setBackgroundColor
+import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+
+private const val STATIC = 0
+private const val ROLLER = 1
+private const val TIME = 2
 
 class TextFragment : Fragment() {
 
@@ -79,6 +87,7 @@ class TextFragment : Fragment() {
                 .show()
         }
 
+        // Pick Color Button
         textViewModel.color.observe(viewLifecycleOwner, { newColor ->
             setBackgroundColor(binding.colorButton, newColor)
         })
@@ -88,13 +97,33 @@ class TextFragment : Fragment() {
             textViewModel.setSpeed(value)
         }
 
-        binding.displayButton.setOnClickListener {
+        // Display Button
+        binding.displayButton.setOnClickListener { onDisplayButtonClick() }
+    }
+
+    /**
+     *  Called when the display button is pressed.
+     *  Send information via Bluetooth.
+     */
+    private fun onDisplayButtonClick() {
+        if (comm.isConnected()) {
+
             val red = Color.red(textViewModel.color.value!!)
             val green = Color.green(textViewModel.color.value!!)
             val blue = Color.blue(textViewModel.color.value!!)
             val text = textViewModel.text.value
-            val data = "$red+$green+$blue+$text+|"
-            comm.sendData(data)
+            val speed = textViewModel.speed.value
+            val data = when (textViewModel.type.value) {
+                STATIC -> "$red+$green+$blue+$text+|"
+                ROLLER -> "$red+$green+$blue+$text+$speed+|"
+                TIME -> {
+                    val time = getCurrentTime()
+                    "$red+$green+$blue+$time+|"
+                }
+                else -> null
+            }
+
+            data?.let { comm.sendData(it) }
         }
     }
 
@@ -105,7 +134,14 @@ class TextFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.about -> this.findNavController().navigate(R.id.action_navigation_text_to_navigation_about)
+            R.id.about -> {
+                val fragment = AboutFragment.create("Text", aboutText)
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, fragment, "AboutText")
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

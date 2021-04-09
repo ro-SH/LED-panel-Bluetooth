@@ -4,7 +4,9 @@ import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.ui.NavigationUI
 import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
 import com.ledpanel.led_panel_control_app.ui.image.ImageFragment
@@ -101,11 +103,20 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
      *  @param fragment New fragment to show
      */
     private fun switchFragments(fragment: Fragment?) {
+        clearBackStack()
         manager
                 .beginTransaction()
                 .replace(R.id.nav_host_fragment, fragment!!)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
+    }
+
+    /**
+     *  Clear BackStack to avoid UI overlay
+     */
+    private fun clearBackStack() {
+        if (manager.backStackEntryCount > 0)
+            manager.popBackStack(manager.getBackStackEntryAt(0).id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,6 +170,10 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         btConnection.sendCommand(data)
     }
 
+    override fun isConnected(): Boolean {
+        return btConnection.isConnected()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 //        btConnection.cleanUp()
@@ -170,4 +185,5 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
  */
 interface DataTransfer {
     fun sendData(data: String)
+    fun isConnected(): Boolean
 }

@@ -2,9 +2,7 @@ package com.ledpanel.led_panel_control_app.ui.draw
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -12,8 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.aboutDraw
+import com.ledpanel.led_panel_control_app.aboutText
 import com.ledpanel.led_panel_control_app.databinding.FragmentDrawBinding
 import com.ledpanel.led_panel_control_app.setBackgroundColor
+import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 const val WIDTH = 32
 const val HEIGHT = 8
@@ -40,7 +41,27 @@ class DrawFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.actionbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.about -> {
+                val fragment = AboutFragment.create("Draw", aboutDraw)
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, fragment, "AboutDraw")
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     @SuppressLint("ClickableViewAccessibility")

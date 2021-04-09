@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.aboutDraw
+import com.ledpanel.led_panel_control_app.aboutQueue
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
 import com.ledpanel.led_panel_control_app.hideKeyboard
+import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 const val QUEUE = 0
 const val TIMETABLE = 1
@@ -42,11 +45,23 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.overflow_menu, menu)
+        inflater.inflate(R.menu.queue_actionbar_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        showAddDialog()
+        when (item.itemId) {
+            R.id.about -> {
+                val fragment = AboutFragment.create("Queue", aboutQueue)
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment, fragment, "AboutQueue")
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            R.id.add -> showAddDialog()
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -69,8 +84,10 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         binding.fragmentQueueRvQueueList.adapter = adapter
         binding.fragmentQueueRvQueueList.layoutManager = LinearLayoutManager(context)
 
+        // Clear Button
         binding.fragmentQueueClearButton.setOnClickListener { onClearButtonClicked() }
 
+        // Type Spinner
         binding.fragmentQueueSpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?,
@@ -84,8 +101,10 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
+        // Skip Button
         binding.fragmentQueueSkipButton.setOnClickListener { onSkipButtonClicked() }
 
+        // Display Button
         binding.fragmentQueueDisplayButton.setOnClickListener {
             hideKeyboard()
             // TODO: CHECK AND SEND DATA
