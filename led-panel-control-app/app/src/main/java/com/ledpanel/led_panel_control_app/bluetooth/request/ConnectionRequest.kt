@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
-import android.util.Log
 import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 import java.io.IOException
 import java.util.*
@@ -66,24 +65,24 @@ class ConnectionRequest(private val context : Context, private val eventListener
                                    private val onComplete: (isSuccess : Boolean) -> Unit) : Thread() {
 
         private var bluetoothAdapter : BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        private var bluetoothSocket : BluetoothSocket? = createSocket();
+        private var bluetoothSocket : BluetoothSocket? = createSocket()
 
         /**
          *  Connect to device and return socket
          */
         private fun createSocket() : BluetoothSocket? {
-            var socket : BluetoothSocket? = null;
+            var socket : BluetoothSocket? = null
 
             try {
                 val uuid = if (device.uuids.isNotEmpty())
                     device.uuids[0].uuid
-                else UUID.fromString(BASE_UUID);
+                else UUID.fromString(BASE_UUID)
 
                 socket = device.createRfcommSocketToServiceRecord(uuid)
             }
             catch (e : IOException) {}
 
-            return socket;
+            return socket
         }
 
         /**

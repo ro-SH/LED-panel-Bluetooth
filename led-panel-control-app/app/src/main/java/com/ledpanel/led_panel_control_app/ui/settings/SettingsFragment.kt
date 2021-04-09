@@ -7,14 +7,25 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.ledpanel.led_panel_control_app.MainActivity
-import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutDraw
-import com.ledpanel.led_panel_control_app.aboutSettings
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentSettingsBinding
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
+import java.lang.NumberFormatException
 
 class SettingsFragment : Fragment() {
+
+    companion object {
+        fun create(width: Int, height: Int): SettingsFragment {
+            val extras = Bundle().apply {
+                putInt("width", width)
+                putInt("height", height)
+            }
+
+            return SettingsFragment().apply {
+                arguments = extras
+            }
+        }
+    }
 
     // Data binding
     private lateinit var binding: FragmentSettingsBinding
@@ -23,7 +34,7 @@ class SettingsFragment : Fragment() {
     private lateinit var settingsViewModel: SettingsViewModel
 
     // Communicator to MainActivity
-    private lateinit var comm: Communicator
+    private lateinit var comm: DataTransfer
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -31,7 +42,7 @@ class SettingsFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
 
-        comm = requireActivity() as Communicator
+        comm = requireActivity() as DataTransfer
 
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_settings, container, false)
@@ -70,8 +81,11 @@ class SettingsFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
+        binding.fragmentSettingsWidth.setText(requireArguments().getInt("width").toString())
+        binding.fragmentSettingsHeight.setText(requireArguments().getInt("height").toString())
+
         // Connect Button
-        binding.connectButton.setOnClickListener {
+        binding.fragmentSettingsConnectButton.setOnClickListener {
 
             // List of device names
             val deviceNames = (activity as MainActivity).getDevicesNames(true)
@@ -90,27 +104,24 @@ class SettingsFragment : Fragment() {
             }
         }
 
+        // Save Button
+        binding.fragmentSettingsSaveButton.setOnClickListener {
+            try {
+                comm.setSize(binding.fragmentSettingsWidth.text.toString().toInt(), binding.fragmentSettingsHeight.text.toString().toInt())
+                Toast.makeText(requireContext(), "Successfully saved!", Toast.LENGTH_SHORT).show()
+            }
+            catch (e: NumberFormatException) {
+                Toast.makeText(requireContext(), "Incorrect size!", Toast.LENGTH_SHORT).show()
+            }
+            finally {
+                hideKeyboard()
+            }
+        }
+
         // disconnect Button
-        binding.disconnectButton.setOnClickListener {
+        binding.fragmentSettingsDisconnectButton.setOnClickListener {
             comm.disconnectDevice()
             settingsViewModel.deleteDeviceData()
         }
-    }
-
-    /**
-     *  Interface for transferring data to MainActivity
-     */
-    interface Communicator {
-        /**
-         *  Transfer Device Id to MainActivity
-         *  @param deviceID
-         *  @param isPaired 'true' if device is paired
-         */
-        fun sendDeviceId(deviceID: Int, isPaired: Boolean)
-
-        /**
-         *  Transfer disconnect device signal
-         */
-        fun disconnectDevice()
     }
 }

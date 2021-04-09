@@ -12,6 +12,9 @@ class DrawViewModel : ViewModel() {
     val color: LiveData<Int>
         get() = _color
 
+    var width: Int = 0
+    var height: Int = 0
+
     init {
         _color.value = Color.WHITE
     }

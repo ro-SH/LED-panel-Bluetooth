@@ -42,4 +42,7 @@
     <string name="disconnect_bt">Disconnect</string>
     <string name="add_text">Add</string>
     <string name="skip_text">Skip</string>
+    <string name="width_text">Width:</string>
+    <string name="height_text">Height:</string>
+    <string name="save_text">Save</string>
 </resources>

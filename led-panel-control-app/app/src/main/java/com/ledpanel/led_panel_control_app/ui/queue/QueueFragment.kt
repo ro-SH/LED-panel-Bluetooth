@@ -1,16 +1,15 @@
 package com.ledpanel.led_panel_control_app.ui.queue
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutDraw
 import com.ledpanel.led_panel_control_app.aboutQueue
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
 import com.ledpanel.led_panel_control_app.hideKeyboard

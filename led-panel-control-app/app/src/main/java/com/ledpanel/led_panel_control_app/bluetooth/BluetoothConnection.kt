@@ -1,6 +1,5 @@
 package com.ledpanel.led_panel_control_app.bluetooth
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.ledpanel.led_panel_control_app.bluetooth.request.ConnectionRequest
 import com.ledpanel.led_panel_control_app.bluetooth.request.DiscoverRequest

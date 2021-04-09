@@ -14,7 +14,13 @@ import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
 
-class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communicator {
+const val DEFAULT_WIDTH = 32
+const val DEFAULT_HEIGHT = 8
+
+class MainActivity : AppCompatActivity(), DataTransfer {
+
+    private var width: Int = DEFAULT_WIDTH
+    private var height: Int = DEFAULT_HEIGHT
 
     private val manager = supportFragmentManager
 
@@ -62,7 +68,7 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
      *  Create SettingsFragment instance if not created. Switch to SettingsFragment.
      */
     private fun createSettingsFragment() {
-        if (settingsFragment == null) settingsFragment = SettingsFragment()
+        if (settingsFragment == null) settingsFragment = SettingsFragment.create(width, height)
         switchFragments(settingsFragment)
     }
 
@@ -78,7 +84,13 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
      *  Create DrawFragment instance if not created. Switch to DrawFragment.
      */
     private fun createDrawFragment() {
-        if(drawFragment == null) drawFragment = DrawFragment()
+        if (drawFragment == null ||
+            drawFragment!!.requireArguments().getInt("width") != width ||
+            drawFragment!!.requireArguments().getInt("height") != height
+        ) {
+            drawFragment = DrawFragment.create(width, height)
+        }
+
         switchFragments(drawFragment)
     }
 
@@ -174,6 +186,11 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
         return btConnection.isConnected()
     }
 
+    override fun setSize(width: Int, height: Int) {
+        this.width = width
+        this.height = height
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 //        btConnection.cleanUp()
@@ -184,6 +201,34 @@ class MainActivity : AppCompatActivity(), DataTransfer, SettingsFragment.Communi
  *  Interface for transferring data Via Bluetooth
  */
 interface DataTransfer {
+
+    /**
+     *  Transfer disconnect device signal
+     */
+    fun disconnectDevice()
+
+    /**
+     *  Transfer Device Id to MainActivity
+     *  @param deviceID
+     *  @param isPaired 'true' if device is paired
+     */
+    fun sendDeviceId(deviceID: Int, isPaired: Boolean)
+
+    /**
+     *  Set new LED panel size
+     *  @param width
+     *  @param height
+     */
+    fun setSize(width: Int, height: Int)
+
+    /**
+     *  Send Data bia Bluetooth
+     *  @param data as String
+     */
     fun sendData(data: String)
+
+    /**
+     *  Returns 'true' if connected to Bluetooth device
+     */
     fun isConnected(): Boolean
 }

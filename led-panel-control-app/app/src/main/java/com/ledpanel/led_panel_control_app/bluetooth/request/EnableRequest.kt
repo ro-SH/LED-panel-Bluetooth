@@ -13,7 +13,7 @@ import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 class EnableRequest(private val context : Context, private val eventListener: IBluetoothEventListener): IBluetoothRequest {
 
     private var requestEnable = false
-    private lateinit var bluetoothAdapter : BluetoothAdapter;
+    private lateinit var bluetoothAdapter : BluetoothAdapter
 
     init {
         registerReceiver()

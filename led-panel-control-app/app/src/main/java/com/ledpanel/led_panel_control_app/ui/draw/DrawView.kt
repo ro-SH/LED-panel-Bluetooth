@@ -1,14 +1,10 @@
 package com.ledpanel.led_panel_control_app.ui.draw
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
 import com.ledpanel.led_panel_control_app.R
-import kotlin.math.abs
 
 // Stroke width for the the paint.
 private const val STROKE_WIDTH = 1f
@@ -38,10 +34,6 @@ class DrawView(context: Context,
     // Pixel Size
     private var pixelWidth: Int? = null
     private var pixelHeight: Int? = null
-
-    // Current position
-    private var currentX = 0F
-    private var currentY = 0F
 
     // Current drawing mode
     private var drawMode = DRAW
@@ -147,26 +139,15 @@ class DrawView(context: Context,
     }
 
     /**
-     * Called whenever the user touches the view
-     */
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        currentX = event.x
-        currentY = event.y
-
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> fillPixel()
-            MotionEvent.ACTION_MOVE -> fillPixel()
-        }
-        return true
-    }
-
-    /**
      *  Fill the pixel with current color
+     *  @param currentX
+     *  @param currentY
+     *  @return Pair of coordinates of current pixel
      */
-    private fun fillPixel() {
+    fun fillPixel(currentX: Float, currentY: Float): Pair<Int, Int>? {
+
         if (extraCanvas.width % currentX == 0F || extraCanvas.height % currentY == 0F)
-            return
+            return null
 
         val pixelX: Int = (currentX / (pixelWidth!! + 1)).toInt()
         val pixelY: Int = (currentY / (pixelHeight!! + 1)).toInt()
@@ -217,5 +198,6 @@ class DrawView(context: Context,
         drawGrid()
 
         invalidate()
+        return Pair(pixelX, pixelY)
     }
 }
