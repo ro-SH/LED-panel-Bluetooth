@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="settingsViewModel"
+            type="com.ledpanel.led_panel_control_app.ui.settings.SettingsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.settings.SettingsFragment">
+
+        <Button
+            android:id="@+id/fragment_settings__connect_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/connect_bt"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <TextView
+            android:id="@+id/fragment_settings__device_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@{settingsViewModel.deviceName}"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__connect_button"
+            tools:text="Device Name: HC-05" />
+
+        <TextView
+            android:id="@+id/fragment_settings__device_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{settingsViewModel.deviceAddress}"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__device_name_text"
+            tools:text="MAC: 30:C0:1B:FB:9A:B5" />
+
+        <EditText
+            android:id="@+id/fragment_settings__height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__width"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__height_text"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__width" />
+
+        <TextView
+            android:id="@+id/fragment_settings__width_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/width_text"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__width"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__width"
+            app:layout_constraintStart_toStartOf="@id/fragment_settings__guideline"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__width"
+            android:layout_marginStart="50dp"/>
+
+        <EditText
+            android:id="@+id/fragment_settings__width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__height_text"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__width_text"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__connect_button" />
+
+        <TextView
+            android:id="@+id/fragment_settings__height_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_text"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__width"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__height"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__width"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__height"
+            android:layout_marginStart="30dp"/>
+
+        <Button
+            android:id="@+id/fragment_settings__save_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/save_text"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/fragment_settings__guideline"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__width"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <Button
+            android:id="@+id/fragment_settings__disconnect_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/disconnect_bt"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/fragment_settings__guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="365dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

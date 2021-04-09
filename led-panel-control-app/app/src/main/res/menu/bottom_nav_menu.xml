@@ -7,11 +7,6 @@
         android:title="" />
 
     <item
-        android:id="@+id/navigation_image"
-        android:icon="@drawable/image_icon_selector"
-        android:title="" />
-
-    <item
         android:id="@+id/navigation_draw"
         android:icon="@drawable/draw_icon_selector"
         android:title="" />

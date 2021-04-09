@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.ui.NavigationUI
 import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
-import com.ledpanel.led_panel_control_app.ui.image.ImageFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
@@ -29,7 +27,6 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
     // Fragments
     private var textFragment: Fragment? = null
-    private var imageFragment: Fragment? = null
     private var drawFragment: Fragment? = null
     private var queueFragment: Fragment? = null
     private var settingsFragment: Fragment? = null
@@ -38,11 +35,6 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         when (item.itemId) {
             R.id.navigation_text -> {
                 createTextFragment()
-                return@OnNavigationItemSelectedListener true
-            }
-
-            R.id.navigation_image -> {
-                createImageFragment()
                 return@OnNavigationItemSelectedListener true
             }
 
@@ -92,14 +84,6 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         }
 
         switchFragments(drawFragment)
-    }
-
-    /**
-     *  Create ImageFragment instance if not created. Switch to ImageFragment.
-     */
-    private fun createImageFragment() {
-        if(imageFragment == null) imageFragment = ImageFragment()
-        switchFragments(imageFragment)
     }
 
     /**
