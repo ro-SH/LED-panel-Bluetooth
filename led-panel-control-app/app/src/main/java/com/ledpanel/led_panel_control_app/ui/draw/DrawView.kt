@@ -20,10 +20,11 @@ const val DRAW = 1
  *  @param cols Number of cols
  *  @param drawColor Current color
  */
-class DrawView(context: Context,
-               private var rows: Int = 8,
-               private var cols: Int = 32,
-               private var drawColor: Int = Color.WHITE
+class DrawView(
+    context: Context,
+    private var rows: Int = 8,
+    private var cols: Int = 32,
+    private var drawColor: Int = Color.WHITE
 ) : View(context) {
 
     private val gridColor = Color.WHITE
@@ -121,20 +122,20 @@ class DrawView(context: Context,
         // Horizontal
         for (line in 1 until rows)
             extraCanvas.drawLine(
-                    0F,
-                    (extraCanvas.height / rows * line).toFloat(),
-                    extraCanvas.width.toFloat(),
-                    (extraCanvas.height / rows * line).toFloat(),
-                    paint
+                0F,
+                (extraCanvas.height / rows * line).toFloat(),
+                extraCanvas.width.toFloat(),
+                (extraCanvas.height / rows * line).toFloat(),
+                paint
             )
         // Vertical
         for (line in 1 until cols)
             extraCanvas.drawLine(
-                    (extraCanvas.width / cols * line).toFloat(),
-                    0F,
-                    (extraCanvas.width / cols * line).toFloat(),
-                    extraCanvas.height.toFloat(),
-                    paint
+                (extraCanvas.width / cols * line).toFloat(),
+                0F,
+                (extraCanvas.width / cols * line).toFloat(),
+                extraCanvas.height.toFloat(),
+                paint
             )
     }
 
@@ -178,19 +179,19 @@ class DrawView(context: Context,
         when (drawMode) {
             DRAW -> {
                 extraCanvas.drawRect(
-                        rect,
-                        Paint().apply {
-                            color = drawColor
-                        }
+                    rect,
+                    Paint().apply {
+                        color = drawColor
+                    }
                 )
             }
 
             ERASE -> {
                 extraCanvas.drawRect(
-                        rect,
-                        Paint().apply {
-                            color = bgColor
-                        }
+                    rect,
+                    Paint().apply {
+                        color = bgColor
+                    }
                 )
             }
         }

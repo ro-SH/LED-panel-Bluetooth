@@ -37,15 +37,16 @@ class SettingsFragment : Fragment() {
     private lateinit var comm: DataTransfer
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
 
         comm = requireActivity() as DataTransfer
 
         binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_settings, container, false)
+            inflater, R.layout.fragment_settings, container, false
+        )
 
         setHasOptionsMenu(true)
         return binding.root
@@ -109,11 +110,9 @@ class SettingsFragment : Fragment() {
             try {
                 comm.setSize(binding.fragmentSettingsWidth.text.toString().toInt(), binding.fragmentSettingsHeight.text.toString().toInt())
                 Toast.makeText(requireContext(), "Successfully saved!", Toast.LENGTH_SHORT).show()
-            }
-            catch (e: NumberFormatException) {
+            } catch (e: NumberFormatException) {
                 Toast.makeText(requireContext(), "Incorrect size!", Toast.LENGTH_SHORT).show()
-            }
-            finally {
+            } finally {
                 hideKeyboard()
             }
         }

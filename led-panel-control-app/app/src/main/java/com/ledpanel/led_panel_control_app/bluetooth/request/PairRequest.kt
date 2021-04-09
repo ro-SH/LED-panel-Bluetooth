@@ -10,10 +10,10 @@ import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 /**
  *  Class for pairing Bluetooth Device
  */
-class PairRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
+class PairRequest(private val context: Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
 
     private var isPairing = false
-    private lateinit var currentBluetoothDevice : BluetoothDevice
+    private lateinit var currentBluetoothDevice: BluetoothDevice
 
     private val pairReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -24,7 +24,6 @@ class PairRequest(private val context : Context, private val eventListener: IBlu
                 isPairing = false
                 eventListener.onPaired()
             }
-
         }
     }
 
@@ -36,7 +35,7 @@ class PairRequest(private val context : Context, private val eventListener: IBlu
      *  Pair Bluetooth Device
      *  @param device
      */
-    fun pair(device : BluetoothDevice) {
+    fun pair(device: BluetoothDevice) {
         if (isPairing)
             return
 
@@ -54,5 +53,4 @@ class PairRequest(private val context : Context, private val eventListener: IBlu
     override fun cleanup() {
         context.unregisterReceiver(pairReceiver)
     }
-
 }

@@ -48,7 +48,8 @@ class DrawFragment : Fragment() {
     ): View {
 
         binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_draw, container, false)
+            inflater, R.layout.fragment_draw, container, false
+        )
 
         binding.lifecycleOwner = this
 
@@ -95,8 +96,8 @@ class DrawFragment : Fragment() {
         )
 
         drawView.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
         )
 
         binding.fragmentDrawCanvasLayout.addView(drawView)
@@ -125,19 +126,22 @@ class DrawFragment : Fragment() {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
-                    .Builder(requireActivity()) // Pass Activity Instance
-                    .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
-                    .setDefaultColor(viewModel.color.value!!) // Pass Default Color
-                    .setColorListener { color, _ ->
-                        viewModel.setColor(color)
-                        drawView.setDrawColor(color)
-                    }
-                    .show()
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setDefaultColor(viewModel.color.value!!) // Pass Default Color
+                .setColorListener { color, _ ->
+                    viewModel.setColor(color)
+                    drawView.setDrawColor(color)
+                }
+                .show()
         }
 
-        viewModel.color.observe(viewLifecycleOwner, { newColor ->
-            setBackgroundColor(binding.fragmentDrawColorButton, newColor)
-        })
+        viewModel.color.observe(
+            viewLifecycleOwner,
+            { newColor ->
+                setBackgroundColor(binding.fragmentDrawColorButton, newColor)
+            }
+        )
 
         // Clear Button
         binding.fragmentDrawIbClear.setOnClickListener { drawView.fill() }

@@ -47,7 +47,7 @@ class BluetoothConnection(val context: Context) {
      *  Pair to Bluetooth device
      *  @param deviceId Device ID in device list
      */
-    fun pairDevice(deviceId : Int) {
+    fun pairDevice(deviceId: Int) {
         val device = discoverRequest.getDevice(deviceId)
         pairRequest.pair(device)
     }

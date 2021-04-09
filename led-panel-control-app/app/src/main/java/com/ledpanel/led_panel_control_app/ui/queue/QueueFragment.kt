@@ -36,7 +36,8 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     ): View {
 
         binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_queue, container, false)
+            inflater, R.layout.fragment_queue, container, false
+        )
 
         setHasOptionsMenu(true)
         return binding.root
@@ -69,7 +70,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
         // Creating QueueViewModel object with QueueViewModelFactory
         queueViewModel = ViewModelProvider(this, QueueViewModelFactory())
-                .get(QueueViewModel::class.java)
+            .get(QueueViewModel::class.java)
 
         // Data Binding
         binding.queueViewModel = queueViewModel
@@ -88,9 +89,13 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
         // Type Spinner
         binding.fragmentQueueSpinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?,
-                                        position: Int, id: Long) {
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val newPosition = parent!!.selectedItemPosition
                 if (newPosition != queueViewModel.type.value) {
                     setVisibility(newPosition)
@@ -138,15 +143,15 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      */
     private fun showAddDialog() {
         val dialogView = LayoutInflater.from(context)
-                .inflate(R.layout.add_queue_dialog, null)
+            .inflate(R.layout.add_queue_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.add_queue_dialog__time)
-                .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == QUEUE)
         dialogView.findViewById<ImageView>(R.id.add_queue_dialog__time_image)
-                .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == QUEUE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
-                .setView(dialogView)
+            .setView(dialogView)
 
         val alertDialog = builder.show()
 
@@ -179,15 +184,15 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      */
     override fun onItemClick(position: Int) {
         val dialogView = LayoutInflater.from(context)
-                .inflate(R.layout.edit_queue_dialog, null)
+            .inflate(R.layout.edit_queue_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time)
-                .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == QUEUE)
         dialogView.findViewById<ImageView>(R.id.edit_queue_dialog__time_image)
-                .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == QUEUE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
-                .setView(dialogView)
+            .setView(dialogView)
 
         val alertDialog = builder.show()
 

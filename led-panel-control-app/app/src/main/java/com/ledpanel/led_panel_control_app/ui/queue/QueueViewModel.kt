@@ -44,13 +44,13 @@ class QueueViewModel : ViewModel() {
         return when {
             newTime == null -> {
                 _queue.add(
-                        QueueItem(newText, "")
+                    QueueItem(newText, "")
                 )
                 true
             }
             checkTime(newTime) -> {
                 _queue.add(
-                        QueueItem(newText, newTime)
+                    QueueItem(newText, newTime)
                 )
                 true
             }

@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ledpanel.led_panel_control_app.R
 
 class QueueAdapter(
-        private val type: Int,
-        private val queue: List<QueueItem>,
-        private val listener: OnItemClickListener
+    private val type: Int,
+    private val queue: List<QueueItem>,
+    private val listener: OnItemClickListener
 ) :
-        RecyclerView.Adapter<QueueAdapter.QueueViewHolder>() {
+    RecyclerView.Adapter<QueueAdapter.QueueViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueueViewHolder {
         val view = if (type == QUEUE)
@@ -32,8 +32,9 @@ class QueueAdapter(
         return queue.size
     }
 
-    inner class QueueViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
-    View.OnClickListener {
+    inner class QueueViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
         private val tvTime: TextView? = if (type == QUEUE) itemView.findViewById(R.id.queue_item__tv_time) else null
         private val tvText: TextView = itemView.findViewById(R.id.queue_item__tv_text)

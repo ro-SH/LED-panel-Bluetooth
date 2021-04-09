@@ -1,11 +1,11 @@
 package com.ledpanel.led_panel_control_app
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
      *  Create QueueFragment instance if not created. Switch to QueueFragment.
      */
     private fun createQueueFragment() {
-        if(queueFragment == null) queueFragment = QueueFragment()
+        if (queueFragment == null) queueFragment = QueueFragment()
         switchFragments(queueFragment)
     }
 
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
      *  Create TextFragment instance if not created. Switch to TextFragment.
      */
     private fun createTextFragment() {
-        if(textFragment == null) textFragment = TextFragment()
+        if (textFragment == null) textFragment = TextFragment()
         switchFragments(textFragment)
     }
 
@@ -101,10 +101,10 @@ class MainActivity : AppCompatActivity(), DataTransfer {
     private fun switchFragments(fragment: Fragment?) {
         clearBackStack()
         manager
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, fragment!!)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment!!)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit()
     }
 
     /**

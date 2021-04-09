@@ -1,25 +1,17 @@
 package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
-import android.os.Build
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.AdapterView
-import android.widget.Button
-import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.github.dhaval2404.colorpicker.util.ColorUtil
 import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val STATIC = 0
@@ -43,7 +35,8 @@ class TextFragment : Fragment() {
     ): View {
 
         binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_text, container, false)
+            inflater, R.layout.fragment_text, container, false
+        )
 
         setHasOptionsMenu(true)
         return binding.root
@@ -70,7 +63,7 @@ class TextFragment : Fragment() {
                 textViewModel.setType(parent!!.selectedItemPosition)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {  }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
         // Color Button
@@ -88,9 +81,12 @@ class TextFragment : Fragment() {
         }
 
         // Pick Color Button
-        textViewModel.color.observe(viewLifecycleOwner, { newColor ->
-            setBackgroundColor(binding.colorButton, newColor)
-        })
+        textViewModel.color.observe(
+            viewLifecycleOwner,
+            { newColor ->
+                setBackgroundColor(binding.colorButton, newColor)
+            }
+        )
 
         // Speed Slider
         binding.speedSlider.addOnChangeListener { _, value, _ ->

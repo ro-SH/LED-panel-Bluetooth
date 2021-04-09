@@ -36,8 +36,7 @@ fun checkTime(time: String): Boolean {
         if (mins.toInt() < 0 || mins.toInt() > 59) {
             return false
         }
-    }
-    catch (e: NumberFormatException) { return false }
+    } catch (e: NumberFormatException) { return false }
 
     return true
 }

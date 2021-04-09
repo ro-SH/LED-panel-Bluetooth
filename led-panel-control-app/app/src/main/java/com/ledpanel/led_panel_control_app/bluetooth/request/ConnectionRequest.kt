@@ -13,8 +13,8 @@ private const val BASE_UUID = "00001101-0000-1000-8000-00805F9B34FB"
 /**
  *  Connect to device class
  */
-class ConnectionRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
-    private var connectionThread : ConnectionThread? = null
+class ConnectionRequest(private val context: Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
+    private var connectionThread: ConnectionThread? = null
 
     /**
      *  Connect to device
@@ -22,8 +22,7 @@ class ConnectionRequest(private val context : Context, private val eventListener
      */
     fun connect(device: BluetoothDevice) {
         eventListener.onConnecting()
-        connectionThread = ConnectionThread(device)
-        { isSuccess -> eventListener.onConnected(isSuccess)}
+        connectionThread = ConnectionThread(device) { isSuccess -> eventListener.onConnected(isSuccess) }
         connectionThread?.start()
     }
 
@@ -57,21 +56,22 @@ class ConnectionRequest(private val context : Context, private val eventListener
         stopConnect()
     }
 
-
     /**
      *  Thread for bluetooth connection
      */
-    private class ConnectionThread(private val device : BluetoothDevice,
-                                   private val onComplete: (isSuccess : Boolean) -> Unit) : Thread() {
+    private class ConnectionThread(
+        private val device: BluetoothDevice,
+        private val onComplete: (isSuccess: Boolean) -> Unit
+    ) : Thread() {
 
-        private var bluetoothAdapter : BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        private var bluetoothSocket : BluetoothSocket? = createSocket()
+        private var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        private var bluetoothSocket: BluetoothSocket? = createSocket()
 
         /**
          *  Connect to device and return socket
          */
-        private fun createSocket() : BluetoothSocket? {
-            var socket : BluetoothSocket? = null
+        private fun createSocket(): BluetoothSocket? {
+            var socket: BluetoothSocket? = null
 
             try {
                 val uuid = if (device.uuids.isNotEmpty())
@@ -79,8 +79,7 @@ class ConnectionRequest(private val context : Context, private val eventListener
                 else UUID.fromString(BASE_UUID)
 
                 socket = device.createRfcommSocketToServiceRecord(uuid)
-            }
-            catch (e : IOException) {}
+            } catch (e: IOException) {}
 
             return socket
         }
@@ -109,9 +108,7 @@ class ConnectionRequest(private val context : Context, private val eventListener
                     bluetoothSocket?.connect()
                     isSuccess = true
                 }
-
-            }
-            catch (e: Exception) { }
+            } catch (e: Exception) { }
 
             onComplete(isSuccess)
         }
@@ -124,6 +121,4 @@ class ConnectionRequest(private val context : Context, private val eventListener
                 bluetoothSocket?.close()
         }
     }
-
-
 }

@@ -61,12 +61,12 @@ class TextViewModel() : ViewModel() {
      *  Change fields visibility based on current type
      */
     private fun setFieldsVisibility() {
-        _textEditVisible.value = when(_type.value) {
+        _textEditVisible.value = when (_type.value) {
             2 -> false
             else -> true
         }
 
-        _speedSliderVisible.value = when(_type.value) {
+        _speedSliderVisible.value = when (_type.value) {
             1 -> true
             else -> false
         }
@@ -91,6 +91,5 @@ class TextViewModel() : ViewModel() {
     // Transfer Data to Panel
     fun onDisplayClick() {
         Log.i("TextViewModel", "type ${type.value}")
-
     }
 }
