@@ -9,6 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.ledpanel.led_panel_control_app.bluetooth.BluetoothConnection
 import com.ledpanel.led_panel_control_app.ui.draw.DrawFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
+import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
 
@@ -24,6 +25,12 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
     // Bluetooth Connection
     private lateinit var btConnection: BluetoothConnection
+
+    // True if passing time to the panel
+    private var passTime: Boolean = false
+
+    // True if passing Queue
+    private var passQueue: Boolean = false
 
     // Fragments
     private var textFragment: Fragment? = null
@@ -158,11 +165,74 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         }
     }
 
+    override fun showTime(red: Int, green: Int, blue: Int) {
+        stopPassing()
+        passTime = true
+        Thread(
+            Runnable {
+                var currentTime = ""
+                while (passTime) {
+                    val newTime = getCurrentTime()
+                    if (newTime != currentTime) {
+                        currentTime = newTime
+                        val data = "$red+$green+$blue+$currentTime+|"
+                        btConnection.sendCommand(data)
+                    }
+                }
+            }
+        ).start()
+    }
+
+    fun isShowingQueue() = passQueue
+
+    override fun showQueue(queue: List<QueueItem>, showTime: Boolean, red: Int, green: Int, blue: Int) {
+        stopPassing()
+
+        passQueue = true
+        when (showTime) {
+            true -> {
+                val tempQueue = queue.toMutableList()
+                Thread(
+                    Runnable {
+                        while (passQueue && tempQueue.size > 0) {
+                            val newTime = getCurrentTime()
+                            if (tempQueue[0].time == newTime) {
+                                val text = tempQueue[0].text
+                                val data = "$red+$green+$blue+$newTime $text+|"
+                                btConnection.sendCommand(data)
+                                tempQueue.removeAt(0)
+                            }
+                        }
+                    }
+                ).start()
+            }
+
+            else -> {
+                val text = queue[0].text
+                val data = "$red+$green+$blue+$text+|"
+                btConnection.sendCommand(data)
+            }
+        }
+    }
+
+    /**
+     *  Stop passing data
+     */
+    private fun stopPassing() {
+        passTime = false
+        passQueue = false
+    }
+
+    override fun fill(red: Int, green: Int, blue: Int) {
+        // TODO: CLEAR COMMAND
+    }
+
     /**
      *  Transfer data via Bluetooth
      *  @param data
      */
     override fun sendData(data: String) {
+        stopPassing()
         btConnection.sendCommand(data)
     }
 
@@ -192,6 +262,11 @@ interface DataTransfer {
     fun disconnectDevice()
 
     /**
+     *  Fill the panel with color
+     */
+    fun fill(red: Int = 0, green: Int = 0, blue: Int = 0)
+
+    /**
      *  Transfer Device Id to MainActivity
      *  @param deviceID
      *  @param isPaired 'true' if device is paired
@@ -210,6 +285,16 @@ interface DataTransfer {
      *  @param data as String
      */
     fun sendData(data: String)
+
+    /**
+     *  Start showing queue on panel
+     */
+    fun showQueue(queue: List<QueueItem>, showTime: Boolean, red: Int, green: Int, blue: Int)
+
+    /**
+     *  Start showing current time on panel
+     */
+    fun showTime(red: Int, green: Int, blue: Int)
 
     /**
      *  Returns 'true' if connected to Bluetooth device

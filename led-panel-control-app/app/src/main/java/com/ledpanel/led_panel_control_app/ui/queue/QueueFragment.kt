@@ -9,10 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutQueue
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
-import com.ledpanel.led_panel_control_app.hideKeyboard
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 const val QUEUE = 0
@@ -25,6 +23,8 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
     // ViewModel for QueueFragment
     private lateinit var queueViewModel: QueueViewModel
+
+    private lateinit var comm: DataTransfer
 
     // Adapter for Recycler View
     private var adapter: QueueAdapter? = null
@@ -68,6 +68,8 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        comm = requireActivity() as DataTransfer
+
         // Creating QueueViewModel object with QueueViewModelFactory
         queueViewModel = ViewModelProvider(this, QueueViewModelFactory())
             .get(QueueViewModel::class.java)
@@ -106,13 +108,52 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         }
 
         // Skip Button
+        queueViewModel.type.observe(
+            viewLifecycleOwner,
+            { type ->
+                binding.fragmentQueueSkipButton.setVisibility(type == QUEUE)
+            }
+        )
         binding.fragmentQueueSkipButton.setOnClickListener { onSkipButtonClicked() }
 
         // Display Button
-        binding.fragmentQueueDisplayButton.setOnClickListener {
-            hideKeyboard()
-            // TODO: CHECK AND SEND DATA
+        binding.fragmentQueueDisplayButton.setOnClickListener { onDisplayClicked() }
+    }
+
+    /**
+     *  Called when display button clicked.
+     *  Transfer data to the panel.
+     */
+    private fun onDisplayClicked() {
+        hideKeyboard()
+        sendData()
+    }
+
+    /**
+     *  Transfer data to the panel
+     */
+    private fun sendData() {
+        if (!comm.isConnected())
+            Toast.makeText(requireContext(), "Device not connected!", Toast.LENGTH_SHORT).show()
+        else if (!checkValid())
+            Toast.makeText(requireContext(), "Incorrect time sequence!", Toast.LENGTH_SHORT).show()
+        else
+            comm.showQueue(queueViewModel.queue, queueViewModel.type.value == TIMETABLE, 139, 0, 255)
+    }
+
+    /**
+     *  Check time sequence
+     */
+    private fun checkValid(): Boolean {
+        if (queueViewModel.type.value == TIMETABLE) {
+            var prevTime = getCurrentTime()
+            for (item in queueViewModel.queue) {
+                if (!isLater(item.time, prevTime))
+                    return false
+                prevTime = item.time
+            }
         }
+        return true
     }
 
     /**
@@ -120,12 +161,15 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      *  Delete the item on position 0.
      */
     private fun onSkipButtonClicked() {
-        if (queueViewModel.queue.isNotEmpty()) {
+        if ((requireActivity() as MainActivity).isShowingQueue() &&
+            queueViewModel.type.value == QUEUE &&
+            queueViewModel.queue.isNotEmpty()
+        ) {
             queueViewModel.removeItemAt(0)
             adapter?.notifyItemRemoved(0)
             binding.fragmentQueueRvQueueList.scrollToPosition(0)
 
-            // TODO: Show item on pos 0
+            sendData()
         }
     }
 
@@ -146,22 +190,22 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
             .inflate(R.layout.add_queue_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.add_queue_dialog__time)
-            .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == TIMETABLE)
         dialogView.findViewById<ImageView>(R.id.add_queue_dialog__time_image)
-            .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == TIMETABLE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
 
         val alertDialog = builder.show()
 
-        val timeField = if (queueViewModel.type.value == QUEUE) dialogView.findViewById<EditText>(R.id.add_queue_dialog__time) else null
+        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.add_queue_dialog__time) else null
         val itemField = dialogView.findViewById<EditText>(R.id.add_queue_dialog__item)
 
         dialogView.findViewById<Button>(R.id.add_queue_dialog__edit_button).setOnClickListener {
             hideKeyboard()
             alertDialog.dismiss()
-            if (queueViewModel.addQueueItem(itemField.text.toString(), if (queueViewModel.type.value == QUEUE) timeField?.text.toString() else null)) {
+            if (queueViewModel.addQueueItem(itemField.text.toString(), if (queueViewModel.type.value == TIMETABLE) timeField?.text.toString() else null)) {
                 adapter?.notifyDataSetChanged()
             }
         }
@@ -187,16 +231,16 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
             .inflate(R.layout.edit_queue_dialog, null)
 
         dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time)
-            .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == TIMETABLE)
         dialogView.findViewById<ImageView>(R.id.edit_queue_dialog__time_image)
-            .setVisibility(queueViewModel.type.value == QUEUE)
+            .setVisibility(queueViewModel.type.value == TIMETABLE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
             .setView(dialogView)
 
         val alertDialog = builder.show()
 
-        val timeField = if (queueViewModel.type.value == QUEUE) dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time) else null
+        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time) else null
         val itemField = dialogView.findViewById<EditText>(R.id.edit_queue_dialog__item)
         timeField?.setText(queueViewModel.queue[position].time)
         itemField.setText(queueViewModel.queue[position].text)
@@ -204,7 +248,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         dialogView.findViewById<Button>(R.id.edit_queue_dialog__edit_button).setOnClickListener {
             hideKeyboard()
             alertDialog.dismiss()
-            if (queueViewModel.editQueueItem(position, itemField.text.toString(), if (queueViewModel.type.value == QUEUE) timeField?.text.toString() else null))
+            if (queueViewModel.editQueueItem(position, itemField.text.toString(), if (queueViewModel.type.value == TIMETABLE) timeField?.text.toString() else null))
                 adapter?.notifyItemChanged(position)
         }
     }
@@ -222,5 +266,12 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     override fun onDeleteItemClick(position: Int) {
         queueViewModel.removeItemAt(position)
         adapter?.notifyItemRemoved(position)
+
+        if ((requireActivity() as MainActivity).isShowingQueue() &&
+            queueViewModel.queue.isNotEmpty() &&
+            queueViewModel.type.value == QUEUE
+        ) {
+            sendData()
+        }
     }
 }

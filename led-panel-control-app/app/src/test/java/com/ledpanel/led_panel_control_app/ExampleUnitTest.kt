@@ -1,6 +1,6 @@
 package com.ledpanel.led_panel_control_app
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

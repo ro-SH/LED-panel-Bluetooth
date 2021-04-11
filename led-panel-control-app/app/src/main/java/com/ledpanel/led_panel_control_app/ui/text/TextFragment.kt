@@ -107,19 +107,20 @@ class TextFragment : Fragment() {
             val red = Color.red(textViewModel.color.value!!)
             val green = Color.green(textViewModel.color.value!!)
             val blue = Color.blue(textViewModel.color.value!!)
-            val text = textViewModel.text.value
-            val speed = textViewModel.speed.value
-            val data = when (textViewModel.type.value) {
-                STATIC -> "$red+$green+$blue+$text+|"
-                ROLLER -> "$red+$green+$blue+$text+$speed+|"
-                TIME -> {
-                    val time = getCurrentTime()
-                    "$red+$green+$blue+$time+|"
-                }
-                else -> null
-            }
 
-            data?.let { comm.sendData(it) }
+            if (textViewModel.type.value == TIME)
+                comm.showTime(red, green, blue)
+            else {
+                val text = textViewModel.text.value
+                val speed = textViewModel.speed.value
+                val data = when (textViewModel.type.value) {
+                    STATIC -> "$red+$green+$blue+$text+|"
+                    ROLLER -> "$red+$green+$blue+$text+$speed+|"
+                    else -> null
+                }
+
+                data?.let { comm.sendData(it) }
+            }
         }
     }
 

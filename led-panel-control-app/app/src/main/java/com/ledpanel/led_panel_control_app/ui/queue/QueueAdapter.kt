@@ -16,10 +16,10 @@ class QueueAdapter(
     RecyclerView.Adapter<QueueAdapter.QueueViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueueViewHolder {
-        val view = if (type == QUEUE)
-            LayoutInflater.from(parent.context).inflate(R.layout.queue_item, parent, false)
-        else
+        val view = if (type == TIMETABLE)
             LayoutInflater.from(parent.context).inflate(R.layout.timetable_item, parent, false)
+        else
+            LayoutInflater.from(parent.context).inflate(R.layout.queue_item, parent, false)
         return QueueViewHolder(view)
     }
 
@@ -36,7 +36,7 @@ class QueueAdapter(
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private val tvTime: TextView? = if (type == QUEUE) itemView.findViewById(R.id.queue_item__tv_time) else null
+        private val tvTime: TextView? = if (type == TIMETABLE) itemView.findViewById(R.id.queue_item__tv_time) else null
         private val tvText: TextView = itemView.findViewById(R.id.queue_item__tv_text)
         private val ibDeleteButton: ImageView = itemView.findViewById(R.id.queue_item__ib_delete_button)
 

@@ -67,13 +67,24 @@ fun generateList(): List<QueueItem> {
 fun getCurrentTime(): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val current = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+//        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
         current.format(formatter)
     } else {
         val date = Date()
-        val formatter = SimpleDateFormat("MMM dd yyyy HH:mma")
+//        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
+        val formatter = SimpleDateFormat("HH:mm")
         formatter.format(date)
     }
+}
+
+/**
+ *  Compares time and return 'true' if first is later
+ *  @param first time
+ *  @param second time
+ */
+fun isLater(first: String, second: String): Boolean {
+    return stringTimeToMins(first) > stringTimeToMins(second)
 }
 
 /**
@@ -88,4 +99,15 @@ fun setBackgroundColor(button: Button, newColor: Int) {
         button.setTextColor(Color.BLACK)
     }
     button.setBackgroundColor(newColor)
+}
+
+/**
+ *  Convert time string to mins
+ *  @param time String
+ *  @return mins Int
+ */
+private fun stringTimeToMins(time: String): Int {
+    val hrs = time.substringBefore(":").toInt()
+    val mins = time.substringAfter(":").toInt()
+    return hrs * 60 + mins
 }
