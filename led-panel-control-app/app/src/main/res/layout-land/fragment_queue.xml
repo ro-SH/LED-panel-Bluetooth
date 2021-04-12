@@ -63,12 +63,26 @@
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/fragment_queue__color_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_color_text"
+            app:layout_constraintBottom_toTopOf="@id/fragment_queue__display_button"
+            app:layout_constraintStart_toEndOf="@id/fragment_queue__list_card"
+            app:layout_constraintEnd_toStartOf="@id/fragment_queue__skip_button"
+            android:layout_marginBottom="12dp"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <Button
             android:id="@+id/fragment_queue__skip_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/skip_text"
-            app:layout_constraintStart_toStartOf="@id/fragment_queue__display_button"
-            app:layout_constraintEnd_toEndOf="@id/fragment_queue__display_button"
+            app:layout_constraintStart_toEndOf="@id/fragment_queue__color_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/fragment_queue__display_button"
             android:layout_marginBottom="12dp"
             style="@style/button"

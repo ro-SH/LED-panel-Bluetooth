@@ -53,6 +53,11 @@ class DrawView(
     }
 
     /**
+     *  Returns current draw mode
+     */
+    fun getDrawMode() = drawMode
+
+    /**
      *  Set new draw mode
      *  @param mode
      */

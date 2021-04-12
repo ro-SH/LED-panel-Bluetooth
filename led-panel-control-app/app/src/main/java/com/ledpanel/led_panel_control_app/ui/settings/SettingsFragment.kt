@@ -27,6 +27,8 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private val TAG = "Settings"
+
     // Data binding
     private lateinit var binding: FragmentSettingsBinding
 
@@ -60,7 +62,7 @@ class SettingsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create("Settings", aboutSettings)
+                val fragment = AboutFragment.create(TAG, aboutSettings)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.nav_host_fragment, fragment, "AboutSettings")
@@ -73,6 +75,8 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         // Creating SettingsViewModel object with TextViewModelFactory
         settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())

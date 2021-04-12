@@ -9,11 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.ledpanel.led_panel_control_app.DataTransfer
-import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutDraw
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentDrawBinding
-import com.ledpanel.led_panel_control_app.setBackgroundColor
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 class DrawFragment : Fragment() {
@@ -29,6 +26,8 @@ class DrawFragment : Fragment() {
             }
         }
     }
+
+    private val TAG = "Drawing"
 
     private lateinit var comm: DataTransfer
 
@@ -65,7 +64,7 @@ class DrawFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create("Draw", aboutDraw)
+                val fragment = AboutFragment.create(TAG, aboutDraw)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.nav_host_fragment, fragment, "AboutDraw")
@@ -79,6 +78,8 @@ class DrawFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         comm = requireActivity() as DataTransfer
 
@@ -103,23 +104,7 @@ class DrawFragment : Fragment() {
         binding.fragmentDrawCanvasLayout.addView(drawView)
 
         // Drawing
-        drawView.setOnTouchListener { _, event ->
-
-            when (event.action) {
-                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                    val coordinates: Pair<Int, Int>? = drawView.fillPixel(event.x, event.y)
-                    if (coordinates != null && comm.isConnected()) {
-                        val red = Color.red(viewModel.color.value!!)
-                        val green = Color.green(viewModel.color.value!!)
-                        val blue = Color.blue(viewModel.color.value!!)
-                        val data = "${coordinates.first}+${coordinates.second}+$red+$green+$blue+|"
-                        comm.sendData(data)
-                    }
-                }
-            }
-
-            return@setOnTouchListener true
-        }
+        drawView.setOnTouchListener { _, event -> return@setOnTouchListener onDrawViewTouch(event) }
 
         // Color Button
         binding.fragmentDrawColorButton.setOnClickListener {
@@ -144,15 +129,65 @@ class DrawFragment : Fragment() {
         )
 
         // Clear Button
-        binding.fragmentDrawIbClear.setOnClickListener { drawView.fill() }
+        binding.fragmentDrawIbClear.setOnClickListener { onClearClicked() }
 
         // Fill Button
-        binding.fragmentDrawIbFill.setOnClickListener { drawView.fill(true) }
+        binding.fragmentDrawIbFill.setOnClickListener { onFillClicked() }
 
         // Draw Button
         binding.fragmentDrawIbDraw.setOnClickListener { drawView.setDrawMode(DRAW) }
 
         // Erase Button
         binding.fragmentDrawIbErase.setOnClickListener { drawView.setDrawMode(ERASE) }
+    }
+
+    /**
+     *  Fill the panel with black color.
+     */
+    private fun onClearClicked() {
+        drawView.fill()
+        if (comm.isConnected()) comm.fill()
+    }
+
+    /**
+     *  Fill the panel with current color.
+     */
+    private fun onFillClicked() {
+        drawView.fill(true)
+        if (comm.isConnected())
+            comm.fill(
+                Color.red(viewModel.color.value!!),
+                Color.green(viewModel.color.value!!),
+                Color.blue(viewModel.color.value!!)
+            )
+    }
+
+    /**
+     *  On DrawViewTouch.
+     *  Perfroms drawing.
+     *  @return 'true'
+     */
+    private fun onDrawViewTouch(event: MotionEvent): Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                val coordinates: Pair<Int, Int>? = drawView.fillPixel(event.x, event.y)
+                if (coordinates != null && comm.isConnected()) {
+                    val data = when (drawView.getDrawMode()) {
+                        DRAW -> {
+                            val red = Color.red(viewModel.color.value!!)
+                            val green = Color.green(viewModel.color.value!!)
+                            val blue = Color.blue(viewModel.color.value!!)
+                            "${coordinates.first}+${coordinates.second}+$red+$green+$blue+|"
+                        }
+
+                        else -> "${coordinates.first}+${coordinates.second}+0+0+0+|"
+                    }
+
+                    comm.sendData(data)
+                }
+            }
+        }
+
+        return true
     }
 }

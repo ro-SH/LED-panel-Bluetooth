@@ -1,5 +1,6 @@
 package com.ledpanel.led_panel_control_app.ui.queue
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.*
@@ -7,6 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.dhaval2404.colorpicker.ColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.*
@@ -17,6 +20,8 @@ const val QUEUE = 0
 const val TIMETABLE = 1
 
 class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
+
+    private val TAG = "Queue"
 
     // Data Binding
     private lateinit var binding: FragmentQueueBinding
@@ -51,7 +56,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create("Queue", aboutQueue)
+                val fragment = AboutFragment.create(TAG, aboutQueue)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.nav_host_fragment, fragment, "AboutQueue")
@@ -67,6 +72,8 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         comm = requireActivity() as DataTransfer
 
@@ -114,6 +121,28 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
                 binding.fragmentQueueSkipButton.setVisibility(type == QUEUE)
             }
         )
+
+        // Color Button
+        binding.fragmentQueueColorButton.setOnClickListener {
+
+            // Open the Color Picker Dialog
+            ColorPickerDialog
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setDefaultColor(queueViewModel.color.value!!) // Pass Default Color
+                .setColorListener { color, _ ->
+                    queueViewModel.setColor(color)
+                }
+                .show()
+        }
+
+        queueViewModel.color.observe(
+            viewLifecycleOwner,
+            { newColor ->
+                setBackgroundColor(binding.fragmentQueueColorButton, newColor)
+            }
+        )
+
         binding.fragmentQueueSkipButton.setOnClickListener { onSkipButtonClicked() }
 
         // Display Button
@@ -138,7 +167,11 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         else if (!checkValid())
             Toast.makeText(requireContext(), "Incorrect time sequence!", Toast.LENGTH_SHORT).show()
         else
-            comm.showQueue(queueViewModel.queue, queueViewModel.type.value == TIMETABLE, 139, 0, 255)
+            comm.showQueue(
+                queueViewModel.queue,
+                queueViewModel.type.value == TIMETABLE,
+                Color.red(queueViewModel.color.value!!), Color.green(queueViewModel.color.value!!), Color.blue(queueViewModel.color.value!!)
+            )
     }
 
     /**

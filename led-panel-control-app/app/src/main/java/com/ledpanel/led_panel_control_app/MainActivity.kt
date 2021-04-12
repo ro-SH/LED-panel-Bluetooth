@@ -127,7 +127,6 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.itemIconTintList = null
-
         btConnection = BluetoothConnection(this)
         btConnection.enableBluetoothAdapter()
 
@@ -160,6 +159,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
      */
     override fun disconnectDevice() {
         if (btConnection.isConnected()) {
+            stopPassing()
             btConnection.sendCommand("0+0+0+ +|")
             btConnection.stopConnectDevice()
         }
@@ -223,8 +223,15 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         passQueue = false
     }
 
+    /**
+     *  Fill panel with RGB color
+     *  @param red
+     *  @param green
+     *  @param blue
+     */
     override fun fill(red: Int, green: Int, blue: Int) {
-        // TODO: CLEAR COMMAND
+        val data = "f+$red+$green+$blue+|"
+//        btConnection.sendCommand(data)
     }
 
     /**
@@ -248,6 +255,10 @@ class MainActivity : AppCompatActivity(), DataTransfer {
     override fun onDestroy() {
         super.onDestroy()
 //        btConnection.cleanUp()
+    }
+
+    fun updateActionBarTitle(title: String) {
+        supportActionBar?.title = title
     }
 }
 

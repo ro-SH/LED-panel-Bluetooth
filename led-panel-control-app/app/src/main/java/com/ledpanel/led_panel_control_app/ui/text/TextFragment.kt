@@ -20,6 +20,8 @@ private const val TIME = 2
 
 class TextFragment : Fragment() {
 
+    private val TAG = "Text"
+
     // Data Binding
     private lateinit var binding: FragmentTextBinding
 
@@ -44,6 +46,8 @@ class TextFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         comm = requireActivity() as DataTransfer
 
@@ -80,7 +84,6 @@ class TextFragment : Fragment() {
                 .show()
         }
 
-        // Pick Color Button
         textViewModel.color.observe(
             viewLifecycleOwner,
             { newColor ->
@@ -132,7 +135,7 @@ class TextFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create("Text", aboutText)
+                val fragment = AboutFragment.create(TAG, aboutText)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.nav_host_fragment, fragment, "AboutText")

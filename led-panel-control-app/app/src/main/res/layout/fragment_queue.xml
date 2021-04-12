@@ -57,7 +57,7 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintStart_toStartOf="@id/fragment_queue__spinner"
             app:layout_constraintTop_toBottomOf="@id/fragment_queue__spinner"
-            app:layout_constraintBottom_toTopOf="@id/fragment_queue__skip_button">
+            app:layout_constraintBottom_toTopOf="@id/fragment_queue__color_button">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_queue__rv_queue_list"
@@ -67,13 +67,27 @@
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/fragment_queue__color_button"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_color_text"
+            app:layout_constraintBottom_toTopOf="@id/fragment_queue__display_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fragment_queue__skip_button"
+            android:layout_marginBottom="12dp"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <Button
             android:id="@+id/fragment_queue__skip_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/skip_text"
-            app:layout_constraintStart_toStartOf="@id/fragment_queue__display_button"
-            app:layout_constraintEnd_toEndOf="@id/fragment_queue__display_button"
             app:layout_constraintBottom_toTopOf="@id/fragment_queue__display_button"
+            app:layout_constraintStart_toEndOf="@id/fragment_queue__color_button"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="12dp"
             style="@style/button"
             app:cornerRadius="@dimen/button_corner_radius"

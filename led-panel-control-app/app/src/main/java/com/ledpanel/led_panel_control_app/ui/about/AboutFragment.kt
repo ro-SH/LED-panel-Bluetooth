@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.ledpanel.led_panel_control_app.MainActivity
 import com.ledpanel.led_panel_control_app.R
 
 class AboutFragment : Fragment() {
+
+    private val TAG = "About"
 
     companion object {
         fun create(mainFragmentName: String, text: String): AboutFragment {
@@ -35,6 +38,8 @@ class AboutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle("$TAG ${requireArguments().getString("mainFragmentName")}")
 
         view.findViewById<TextView>(R.id.fragment_about__description).text = requireArguments().getString("text")
     }
