@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/edit_queue_dialog__header"
+        android:id="@+id/dialog_queue_edit__tv_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_text"
@@ -18,16 +18,16 @@
         android:textStyle="bold"/>
     
     <ImageView
-        android:id="@+id/edit_queue_dialog__time_image"
+        android:id="@+id/dialog_queue_edit__iv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/edit_queue_dialog__header"
-        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__time"
-        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__time"
+        app:layout_constraintStart_toStartOf="@id/dialog_queue_edit__tv_header"
+        app:layout_constraintTop_toTopOf="@id/dialog_queue_edit__et_time"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_queue_edit__et_time"
         android:src="@drawable/ic_time_light_24dp"/>
     
     <EditText
-        android:id="@+id/edit_queue_dialog__time"
+        android:id="@+id/dialog_queue_edit__et_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/edit_text_style"
@@ -35,21 +35,21 @@
         android:ems="10"
         android:hint="@string/time_text"
         android:inputType="time"
-        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__vertical_guideline"
-        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__horizontal_guideline"/>
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__guideline_vertical"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__guideline_horizontal"/>
 
     <ImageView
-        android:id="@+id/edit_queue_dialog__item_image"
+        android:id="@+id/edit_queue_dialog__iv_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_item_light_24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__item"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__et_item"
         android:layout_marginStart="25dp"
-        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__item"/>
+        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__et_item"/>
 
     <EditText
-        android:id="@+id/edit_queue_dialog__item"
+        android:id="@+id/edit_queue_dialog__et_item"
         style="@style/edit_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,28 +57,28 @@
         android:ems="10"
         android:hint="@string/item_text"
         android:inputType="textLongMessage"
-        app:layout_constraintStart_toStartOf="@id/edit_queue_dialog__vertical_guideline"
-        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__time" />
+        app:layout_constraintStart_toStartOf="@id/dialog_queue_edit__guideline_vertical"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__et_time" />
 
     <Button
-        android:id="@+id/edit_queue_dialog__edit_button"
+        android:id="@+id/dialog_queue_edit__btn_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__item"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__et_item"
         android:layout_marginTop="24dp"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/edit_queue_dialog__vertical_guideline"
+        android:id="@+id/dialog_queue_edit__guideline_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="72dp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/edit_queue_dialog__horizontal_guideline"
+        android:id="@+id/dialog_queue_edit__guideline_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -87,13 +87,13 @@
     <Space
         android:layout_width="24dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__time"
-        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__item"/>
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__et_time"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__et_item"/>
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        app:layout_constraintStart_toEndOf="@id/edit_queue_dialog__edit_button"
-        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__edit_button"/>
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__btn_edit"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__btn_edit"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

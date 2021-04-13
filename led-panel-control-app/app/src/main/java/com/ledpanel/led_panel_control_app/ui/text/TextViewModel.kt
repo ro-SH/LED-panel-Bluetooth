@@ -1,7 +1,6 @@
 package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,7 @@ import androidx.lifecycle.ViewModel
 /**
  *  View Model for TextFragment
  */
-class TextViewModel() : ViewModel() {
+class TextViewModel : ViewModel() {
 
     // Current Color Int
     private val _color = MutableLiveData<Int>()
@@ -86,10 +85,5 @@ class TextViewModel() : ViewModel() {
      */
     fun setSpeed(newSpeed: Float) {
         _speed.value = newSpeed.toDouble()
-    }
-
-    // Transfer Data to Panel
-    fun onDisplayClick() {
-        Log.i("TextViewModel", "type ${type.value}")
     }
 }

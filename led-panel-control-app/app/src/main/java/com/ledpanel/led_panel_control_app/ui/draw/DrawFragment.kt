@@ -25,10 +25,11 @@ class DrawFragment : Fragment() {
                 arguments = extras
             }
         }
+
+        private const val TAG = "Drawing"
     }
 
-    private val TAG = "Drawing"
-
+    // DataTransfer interface
     private lateinit var comm: DataTransfer
 
     // DataBinding
@@ -67,7 +68,7 @@ class DrawFragment : Fragment() {
                 val fragment = AboutFragment.create(TAG, aboutDraw)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment, "AboutDraw")
+                    .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutDraw")
                     .addToBackStack(null)
                     .commit()
             }
@@ -79,6 +80,7 @@ class DrawFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Update fragment title
         (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         comm = requireActivity() as DataTransfer
@@ -107,7 +109,7 @@ class DrawFragment : Fragment() {
         drawView.setOnTouchListener { _, event -> return@setOnTouchListener onDrawViewTouch(event) }
 
         // Color Button
-        binding.fragmentDrawColorButton.setOnClickListener {
+        binding.fragmentDrawBtnColor.setOnClickListener {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
@@ -124,7 +126,7 @@ class DrawFragment : Fragment() {
         viewModel.color.observe(
             viewLifecycleOwner,
             { newColor ->
-                setBackgroundColor(binding.fragmentDrawColorButton, newColor)
+                setBackgroundColor(binding.fragmentDrawBtnColor, newColor)
             }
         )
 
@@ -164,7 +166,7 @@ class DrawFragment : Fragment() {
 
     /**
      *  On DrawViewTouch.
-     *  Perfroms drawing.
+     *  Performs drawing.
      *  @return 'true'
      */
     private fun onDrawViewTouch(event: MotionEvent): Boolean {
@@ -177,10 +179,10 @@ class DrawFragment : Fragment() {
                             val red = Color.red(viewModel.color.value!!)
                             val green = Color.green(viewModel.color.value!!)
                             val blue = Color.blue(viewModel.color.value!!)
-                            "${coordinates.first}+${coordinates.second}+$red+$green+$blue+|"
+                            "d+${coordinates.first}+${coordinates.second}+$red+$green+$blue+|"
                         }
 
-                        else -> "${coordinates.first}+${coordinates.second}+0+0+0+|"
+                        else -> "d+${coordinates.first}+${coordinates.second}+0+0+0+|"
                     }
 
                     comm.sendData(data)

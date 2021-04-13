@@ -9,7 +9,7 @@ import java.lang.NumberFormatException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Date
 
 // Descriptions
 const val aboutText = "Text description"
@@ -67,12 +67,10 @@ fun generateList(): List<QueueItem> {
 fun getCurrentTime(): String {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val current = LocalDateTime.now()
-//        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
         val formatter = DateTimeFormatter.ofPattern("HH:mm")
         current.format(formatter)
     } else {
         val date = Date()
-//        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm")
         val formatter = SimpleDateFormat("HH:mm")
         formatter.format(date)
     }

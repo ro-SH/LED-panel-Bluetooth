@@ -2,8 +2,17 @@ package com.ledpanel.led_panel_control_app.ui.queue
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -12,8 +21,15 @@ import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.util.setVisibility
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.ledpanel.led_panel_control_app.*
+import com.ledpanel.led_panel_control_app.DataTransfer
+import com.ledpanel.led_panel_control_app.MainActivity
+import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.aboutQueue
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
+import com.ledpanel.led_panel_control_app.getCurrentTime
+import com.ledpanel.led_panel_control_app.hideKeyboard
+import com.ledpanel.led_panel_control_app.isLater
+import com.ledpanel.led_panel_control_app.setBackgroundColor
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 const val QUEUE = 0
@@ -21,7 +37,9 @@ const val TIMETABLE = 1
 
 class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
-    private val TAG = "Queue"
+    companion object {
+        private const val TAG = "Queue"
+    }
 
     // Data Binding
     private lateinit var binding: FragmentQueueBinding
@@ -29,6 +47,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     // ViewModel for QueueFragment
     private lateinit var queueViewModel: QueueViewModel
 
+    // DataTransfer interface
     private lateinit var comm: DataTransfer
 
     // Adapter for Recycler View
@@ -59,7 +78,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
                 val fragment = AboutFragment.create(TAG, aboutQueue)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment, "AboutQueue")
+                    .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutQueue")
                     .addToBackStack(null)
                     .commit()
             }
@@ -73,6 +92,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set fragment title
         (requireActivity() as MainActivity).updateActionBarTitle(TAG)
 
         comm = requireActivity() as DataTransfer
@@ -90,14 +110,14 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         // Adapter for Recycler View
         adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this)
 
-        binding.fragmentQueueRvQueueList.adapter = adapter
-        binding.fragmentQueueRvQueueList.layoutManager = LinearLayoutManager(context)
+        binding.fragmentQueueRvQueue.adapter = adapter
+        binding.fragmentQueueRvQueue.layoutManager = LinearLayoutManager(context)
 
         // Clear Button
-        binding.fragmentQueueClearButton.setOnClickListener { onClearButtonClicked() }
+        binding.fragmentQueueBtnClear.setOnClickListener { onClearButtonClicked() }
 
         // Type Spinner
-        binding.fragmentQueueSpinner.onItemSelectedListener = object :
+        binding.fragmentQueueSpinnerType.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -118,12 +138,12 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         queueViewModel.type.observe(
             viewLifecycleOwner,
             { type ->
-                binding.fragmentQueueSkipButton.setVisibility(type == QUEUE)
+                binding.fragmentQueueBtnSkip.setVisibility(type == QUEUE)
             }
         )
 
         // Color Button
-        binding.fragmentQueueColorButton.setOnClickListener {
+        binding.fragmentQueueBtnColor.setOnClickListener {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
@@ -139,14 +159,15 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         queueViewModel.color.observe(
             viewLifecycleOwner,
             { newColor ->
-                setBackgroundColor(binding.fragmentQueueColorButton, newColor)
+                setBackgroundColor(binding.fragmentQueueBtnColor, newColor)
             }
         )
 
-        binding.fragmentQueueSkipButton.setOnClickListener { onSkipButtonClicked() }
+        // Skip button
+        binding.fragmentQueueBtnSkip.setOnClickListener { onSkipButtonClicked() }
 
         // Display Button
-        binding.fragmentQueueDisplayButton.setOnClickListener { onDisplayClicked() }
+        binding.fragmentQueueBtnDisplay.setOnClickListener { onDisplayClicked() }
     }
 
     /**
@@ -176,6 +197,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
     /**
      *  Check time sequence
+     *  @return 'true' if valid time sequence
      */
     private fun checkValid(): Boolean {
         if (queueViewModel.type.value == TIMETABLE) {
@@ -200,7 +222,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         ) {
             queueViewModel.removeItemAt(0)
             adapter?.notifyItemRemoved(0)
-            binding.fragmentQueueRvQueueList.scrollToPosition(0)
+            binding.fragmentQueueRvQueue.scrollToPosition(0)
 
             sendData()
         }
@@ -220,11 +242,11 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      */
     private fun showAddDialog() {
         val dialogView = LayoutInflater.from(context)
-            .inflate(R.layout.add_queue_dialog, null)
+            .inflate(R.layout.dialog_queue_add, null)
 
-        dialogView.findViewById<EditText>(R.id.add_queue_dialog__time)
+        dialogView.findViewById<EditText>(R.id.dialog_queue_add__et_time)
             .setVisibility(queueViewModel.type.value == TIMETABLE)
-        dialogView.findViewById<ImageView>(R.id.add_queue_dialog__time_image)
+        dialogView.findViewById<ImageView>(R.id.dialog_queue_add__iv_time)
             .setVisibility(queueViewModel.type.value == TIMETABLE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
@@ -232,10 +254,10 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
         val alertDialog = builder.show()
 
-        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.add_queue_dialog__time) else null
-        val itemField = dialogView.findViewById<EditText>(R.id.add_queue_dialog__item)
+        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.dialog_queue_add__et_time) else null
+        val itemField = dialogView.findViewById<EditText>(R.id.dialog_queue_add__et_item)
 
-        dialogView.findViewById<Button>(R.id.add_queue_dialog__edit_button).setOnClickListener {
+        dialogView.findViewById<Button>(R.id.dialog_queue_add__btn_edit).setOnClickListener {
             hideKeyboard()
             alertDialog.dismiss()
             if (queueViewModel.addQueueItem(itemField.text.toString(), if (queueViewModel.type.value == TIMETABLE) timeField?.text.toString() else null)) {
@@ -252,7 +274,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         queueViewModel.setQueueType(position)
 
         adapter = QueueAdapter(queueViewModel.type.value!!, queueViewModel.queue, this@QueueFragment)
-        binding.fragmentQueueRvQueueList.adapter = adapter
+        binding.fragmentQueueRvQueue.adapter = adapter
     }
 
     /**
@@ -261,11 +283,11 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      */
     override fun onItemClick(position: Int) {
         val dialogView = LayoutInflater.from(context)
-            .inflate(R.layout.edit_queue_dialog, null)
+            .inflate(R.layout.dialog_queue_edit, null)
 
-        dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time)
+        dialogView.findViewById<EditText>(R.id.dialog_queue_edit__et_time)
             .setVisibility(queueViewModel.type.value == TIMETABLE)
-        dialogView.findViewById<ImageView>(R.id.edit_queue_dialog__time_image)
+        dialogView.findViewById<ImageView>(R.id.dialog_queue_edit__iv_time)
             .setVisibility(queueViewModel.type.value == TIMETABLE)
 
         val builder = MaterialAlertDialogBuilder(requireContext())
@@ -273,12 +295,12 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
 
         val alertDialog = builder.show()
 
-        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.edit_queue_dialog__time) else null
-        val itemField = dialogView.findViewById<EditText>(R.id.edit_queue_dialog__item)
+        val timeField = if (queueViewModel.type.value == TIMETABLE) dialogView.findViewById<EditText>(R.id.dialog_queue_edit__et_time) else null
+        val itemField = dialogView.findViewById<EditText>(R.id.edit_queue_dialog__et_item)
         timeField?.setText(queueViewModel.queue[position].time)
         itemField.setText(queueViewModel.queue[position].text)
 
-        dialogView.findViewById<Button>(R.id.edit_queue_dialog__edit_button).setOnClickListener {
+        dialogView.findViewById<Button>(R.id.dialog_queue_edit__btn_edit).setOnClickListener {
             hideKeyboard()
             alertDialog.dismiss()
             if (queueViewModel.editQueueItem(position, itemField.text.toString(), if (queueViewModel.type.value == TIMETABLE) timeField?.text.toString() else null))

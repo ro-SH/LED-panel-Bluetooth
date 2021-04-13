@@ -11,8 +11,6 @@ import com.ledpanel.led_panel_control_app.R
 
 class AboutFragment : Fragment() {
 
-    private val TAG = "About"
-
     companion object {
         fun create(mainFragmentName: String, text: String): AboutFragment {
             val extras = Bundle().apply {
@@ -24,6 +22,8 @@ class AboutFragment : Fragment() {
                 arguments = extras
             }
         }
+
+        private const val TAG = "About"
     }
 
     override fun onCreateView(
@@ -39,8 +39,10 @@ class AboutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as MainActivity).updateActionBarTitle("$TAG ${requireArguments().getString("mainFragmentName")}")
+        // Update fragment title
+        (requireActivity() as MainActivity).updateActionBarTitle("${Companion.TAG} ${requireArguments().getString("mainFragmentName")}")
 
-        view.findViewById<TextView>(R.id.fragment_about__description).text = requireArguments().getString("text")
+        // Set description
+        view.findViewById<TextView>(R.id.fragment_about__tv_description).text = requireArguments().getString("text")
     }
 }

@@ -1,7 +1,11 @@
 package com.ledpanel.led_panel_control_app.ui.draw
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.ledpanel.led_panel_control_app.R

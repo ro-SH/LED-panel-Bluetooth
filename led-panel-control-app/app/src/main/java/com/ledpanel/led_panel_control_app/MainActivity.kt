@@ -18,6 +18,7 @@ const val DEFAULT_HEIGHT = 8
 
 class MainActivity : AppCompatActivity(), DataTransfer {
 
+    // Panel size
     private var width: Int = DEFAULT_WIDTH
     private var height: Int = DEFAULT_HEIGHT
 
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         clearBackStack()
         manager
             .beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment!!)
+            .replace(R.id.activity_main__nav_host_fragment, fragment!!)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
     }
@@ -125,7 +126,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        val navView: BottomNavigationView = findViewById(R.id.activity_main__bnv)
         navView.itemIconTintList = null
         btConnection = BluetoothConnection(this)
         btConnection.enableBluetoothAdapter()
@@ -165,26 +166,41 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         }
     }
 
+    /**
+     *  Start showing RGB real time in a separate thread.
+     *  @param red
+     *  @param green
+     *  @param blue
+     */
     override fun showTime(red: Int, green: Int, blue: Int) {
         stopPassing()
         passTime = true
-        Thread(
-            Runnable {
-                var currentTime = ""
-                while (passTime) {
-                    val newTime = getCurrentTime()
-                    if (newTime != currentTime) {
-                        currentTime = newTime
-                        val data = "$red+$green+$blue+$currentTime+|"
-                        btConnection.sendCommand(data)
-                    }
+        Thread {
+            var currentTime = ""
+            while (passTime) {
+                val newTime = getCurrentTime()
+                if (newTime != currentTime) {
+                    currentTime = newTime
+                    val data = "s+$red+$green+$blue+$currentTime+|"
+                    btConnection.sendCommand(data)
                 }
             }
-        ).start()
+        }.start()
     }
 
+    /**
+     * Returns where Queue is displayed.
+     */
     fun isShowingQueue() = passQueue
 
+    /**
+     *  Start showing RGB Queue on panel in real time.
+     *  @param queue
+     *  @param showTime Whether it is queue or timetable
+     *  @param red
+     *  @param green
+     *  @param blue
+     */
     override fun showQueue(queue: List<QueueItem>, showTime: Boolean, red: Int, green: Int, blue: Int) {
         stopPassing()
 
@@ -192,24 +208,22 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         when (showTime) {
             true -> {
                 val tempQueue = queue.toMutableList()
-                Thread(
-                    Runnable {
-                        while (passQueue && tempQueue.size > 0) {
-                            val newTime = getCurrentTime()
-                            if (tempQueue[0].time == newTime) {
-                                val text = tempQueue[0].text
-                                val data = "$red+$green+$blue+$newTime $text+|"
-                                btConnection.sendCommand(data)
-                                tempQueue.removeAt(0)
-                            }
+                Thread {
+                    while (passQueue && tempQueue.size > 0) {
+                        val newTime = getCurrentTime()
+                        if (tempQueue[0].time == newTime) {
+                            val text = tempQueue[0].text
+                            val data = "s+$red+$green+$blue+$newTime $text+|"
+                            btConnection.sendCommand(data)
+                            tempQueue.removeAt(0)
                         }
                     }
-                ).start()
+                }.start()
             }
 
             else -> {
                 val text = queue[0].text
-                val data = "$red+$green+$blue+$text+|"
+                val data = "s+$red+$green+$blue+$text+|"
                 btConnection.sendCommand(data)
             }
         }
@@ -231,7 +245,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
      */
     override fun fill(red: Int, green: Int, blue: Int) {
         val data = "f+$red+$green+$blue+|"
-//        btConnection.sendCommand(data)
+        btConnection.sendCommand(data)
     }
 
     /**
@@ -243,10 +257,18 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         btConnection.sendCommand(data)
     }
 
+    /**
+     *  Returns if device is connected.
+     */
     override fun isConnected(): Boolean {
         return btConnection.isConnected()
     }
 
+    /**
+     *  Set new panel size.
+     *  @param width
+     *  @param height
+     */
     override fun setSize(width: Int, height: Int) {
         this.width = width
         this.height = height
@@ -254,61 +276,14 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
     override fun onDestroy() {
         super.onDestroy()
-//        btConnection.cleanUp()
+        btConnection.cleanUp()
     }
 
-    fun updateActionBarTitle(title: String) {
-        supportActionBar?.title = title
+    /**
+     *  Set new ActionBar title.
+     *  @param newTitle
+     */
+    fun updateActionBarTitle(newTitle: String) {
+        supportActionBar?.title = newTitle
     }
-}
-
-/**
- *  Interface for transferring data Via Bluetooth
- */
-interface DataTransfer {
-
-    /**
-     *  Transfer disconnect device signal
-     */
-    fun disconnectDevice()
-
-    /**
-     *  Fill the panel with color
-     */
-    fun fill(red: Int = 0, green: Int = 0, blue: Int = 0)
-
-    /**
-     *  Transfer Device Id to MainActivity
-     *  @param deviceID
-     *  @param isPaired 'true' if device is paired
-     */
-    fun sendDeviceId(deviceID: Int, isPaired: Boolean)
-
-    /**
-     *  Set new LED panel size
-     *  @param width
-     *  @param height
-     */
-    fun setSize(width: Int, height: Int)
-
-    /**
-     *  Send Data bia Bluetooth
-     *  @param data as String
-     */
-    fun sendData(data: String)
-
-    /**
-     *  Start showing queue on panel
-     */
-    fun showQueue(queue: List<QueueItem>, showTime: Boolean, red: Int, green: Int, blue: Int)
-
-    /**
-     *  Start showing current time on panel
-     */
-    fun showTime(red: Int, green: Int, blue: Int)
-
-    /**
-     *  Returns 'true' if connected to Bluetooth device
-     */
-    fun isConnected(): Boolean
 }

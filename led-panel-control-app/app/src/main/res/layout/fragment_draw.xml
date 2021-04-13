@@ -25,7 +25,7 @@
         </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/fragment_draw__color_button"
+            android:id="@+id/fragment_draw__btn_color"
             style="@style/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:background="@color/white"
             android:src="@drawable/ic_fill"
             app:layout_constraintEnd_toStartOf="@+id/fragment_draw__end_guideline"
-            app:layout_constraintTop_toBottomOf="@id/fragment_draw__color_button" />
+            app:layout_constraintTop_toBottomOf="@id/fragment_draw__btn_color" />
 
         <ImageButton
             android:id="@+id/fragment_draw__ib_clear"

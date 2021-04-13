@@ -2,25 +2,32 @@ package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.ledpanel.led_panel_control_app.*
+import com.ledpanel.led_panel_control_app.DataTransfer
+import com.ledpanel.led_panel_control_app.MainActivity
+import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.aboutText
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
+import com.ledpanel.led_panel_control_app.setBackgroundColor
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
-import java.util.*
 
 private const val STATIC = 0
 private const val ROLLER = 1
 private const val TIME = 2
 
 class TextFragment : Fragment() {
-
-    private val TAG = "Text"
 
     // Data Binding
     private lateinit var binding: FragmentTextBinding
@@ -62,7 +69,7 @@ class TextFragment : Fragment() {
         binding.lifecycleOwner = this
 
         // Select Type Spinner
-        binding.stringTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.fragmentTextSpinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 textViewModel.setType(parent!!.selectedItemPosition)
             }
@@ -71,7 +78,7 @@ class TextFragment : Fragment() {
         }
 
         // Color Button
-        binding.colorButton.setOnClickListener {
+        binding.fragmentTextBtnColor.setOnClickListener {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
@@ -87,12 +94,12 @@ class TextFragment : Fragment() {
         textViewModel.color.observe(
             viewLifecycleOwner,
             { newColor ->
-                setBackgroundColor(binding.colorButton, newColor)
+                setBackgroundColor(binding.fragmentTextBtnColor, newColor)
             }
         )
 
         // Speed Slider
-        binding.speedSlider.addOnChangeListener { _, value, _ ->
+        binding.fragmentTextSliderSpeed.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
         }
 
@@ -117,14 +124,14 @@ class TextFragment : Fragment() {
                 val text = textViewModel.text.value
                 val speed = textViewModel.speed.value
                 val data = when (textViewModel.type.value) {
-                    STATIC -> "$red+$green+$blue+$text+|"
-                    ROLLER -> "$red+$green+$blue+$text+$speed+|"
+                    STATIC -> "s+$red+$green+$blue+$text+0+|"
+                    ROLLER -> "s+$red+$green+$blue+$text+$speed+|"
                     else -> null
                 }
 
                 data?.let { comm.sendData(it) }
             }
-        }
+        } else Toast.makeText(requireContext(), "Device not connected!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -138,11 +145,15 @@ class TextFragment : Fragment() {
                 val fragment = AboutFragment.create(TAG, aboutText)
                 requireActivity().supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.nav_host_fragment, fragment, "AboutText")
+                    .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutText")
                     .addToBackStack(null)
                     .commit()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        private const val TAG = "Text"
     }
 }
