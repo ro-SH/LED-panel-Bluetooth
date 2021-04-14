@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">LED Panel Control</string>
+    <string name="text_title">Вывод текста</string>
+    <string name="draw_title">Рисование</string>
+    <string name="queue_title">Вывод очереди</string>
+    <string name="settings_title">Настройки</string>
+    <string name="string_type_text">Тип строки</string>
+    <string name="display_text">Показать</string>
+
+    <string-array name="string_types">
+        <item>Статичная</item>
+        <item>Динамичная</item>
+        <item>Текущее время</item>
+    </string-array>
+
+    <string-array name="queue_types">
+        <item>Очередь</item>
+        <item>Расписание</item>
+    </string-array>
+
+    <string name="about_title">Описание</string>
+    <string name="enter_text_hint">Введите текст…</string>
+    <string name="pick_color_text">Цвет</string>
+    <string name="speed_format">Скорость: x%s</string>
+    <string name="queue_type_text">Тип</string>
+
+    <string name="time_text">Время</string>
+    <string name="item_text">Пункт</string>
+    <string name="time_image_description">Time Image</string>
+    <string name="item_image_description">Item Image</string>
+    <string name="add_button_text">Добавить</string>
+    <string name="connect_bt">Соединить</string>
+
+    <string name="clear_text">Очистить</string>
+    <string name="edit_text">Редактировать</string>
+
+    <string name="disconnect_bt">Отсоединить</string>
+    <string name="add_text">Добавить</string>
+    <string name="skip_text">Пропустить</string>
+    <string name="width_text">Ширина:</string>
+    <string name="height_text">Высота:</string>
+    <string name="save_text">Сохранить</string>
+    <string name="device_not_connected">Устройство не подключено!</string>
+    <string name="saved_text">Сохранено!</string>
+    <string name="incorrect_size_text">Некорректные размеры!</string>
+    <string name="no_paired_devices_text">Нет сопряжённых устройств!</string>
+    <string name="paired_devices_text">Сопряжённые устройства</string>
+    <string name="no_connected_devices_text">Устройство не подключено</string>
+    <string name="device_name">Устройство:</string>
+    <string name="about_text_title">Описание вывода текста</string>
+    <string name="about_draw_title">Описание рисования</string>
+    <string name="about_queue_title">Описание очереди</string>
+    <string name="about_settings_title">Описание настроек</string>
+    <string name="about_text_description">Описание вывода текста</string>
+    <string name="about_draw_description">Описание рисования</string>
+    <string name="about_queue_description">Описание вывода очереди</string>
+    <string name="about_settings_description">Описание настроек</string>
+</resources>

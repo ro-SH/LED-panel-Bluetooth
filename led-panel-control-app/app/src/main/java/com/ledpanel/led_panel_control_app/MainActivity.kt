@@ -276,7 +276,8 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
     override fun onDestroy() {
         super.onDestroy()
-        btConnection.cleanUp()
+        if (btConnection.isConnected())
+            btConnection.cleanUp()
     }
 
     /**

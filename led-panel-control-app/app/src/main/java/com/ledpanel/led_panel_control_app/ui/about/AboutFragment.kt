@@ -22,8 +22,6 @@ class AboutFragment : Fragment() {
                 arguments = extras
             }
         }
-
-        private const val TAG = "About"
     }
 
     override fun onCreateView(
@@ -40,7 +38,7 @@ class AboutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Update fragment title
-        (requireActivity() as MainActivity).updateActionBarTitle("${Companion.TAG} ${requireArguments().getString("mainFragmentName")}")
+        (requireActivity() as MainActivity).updateActionBarTitle(requireArguments().getString("mainFragmentName")!!)
 
         // Set description
         view.findViewById<TextView>(R.id.fragment_about__tv_description).text = requireArguments().getString("text")

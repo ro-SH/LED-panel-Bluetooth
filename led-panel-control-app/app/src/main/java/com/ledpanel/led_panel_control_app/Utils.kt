@@ -11,12 +11,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
-// Descriptions
-const val aboutText = "Text description"
-const val aboutDraw = "Draw description"
-const val aboutQueue = "Queue description"
-const val aboutSettings = "Settings description"
-
 /**
  *  @param time
  *  @return 'true' if string formats time

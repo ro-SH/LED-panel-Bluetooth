@@ -25,8 +25,6 @@ class DrawFragment : Fragment() {
                 arguments = extras
             }
         }
-
-        private const val TAG = "Drawing"
     }
 
     // DataTransfer interface
@@ -65,7 +63,7 @@ class DrawFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create(TAG, aboutDraw)
+                val fragment = AboutFragment.create(getString(R.string.about_draw_title), getString(R.string.about_draw_description))
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutDraw")
@@ -81,7 +79,7 @@ class DrawFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Update fragment title
-        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
+        (requireActivity() as MainActivity).updateActionBarTitle(getString(R.string.draw_title))
 
         comm = requireActivity() as DataTransfer
 

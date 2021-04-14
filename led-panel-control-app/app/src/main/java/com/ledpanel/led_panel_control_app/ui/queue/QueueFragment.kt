@@ -24,7 +24,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.DataTransfer
 import com.ledpanel.led_panel_control_app.MainActivity
 import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutQueue
 import com.ledpanel.led_panel_control_app.databinding.FragmentQueueBinding
 import com.ledpanel.led_panel_control_app.getCurrentTime
 import com.ledpanel.led_panel_control_app.hideKeyboard
@@ -36,10 +35,6 @@ const val QUEUE = 0
 const val TIMETABLE = 1
 
 class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
-
-    companion object {
-        private const val TAG = "Queue"
-    }
 
     // Data Binding
     private lateinit var binding: FragmentQueueBinding
@@ -75,7 +70,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create(TAG, aboutQueue)
+                val fragment = AboutFragment.create(getString(R.string.about_queue_title), getString(R.string.about_queue_description))
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutQueue")
@@ -93,7 +88,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Set fragment title
-        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
+        (requireActivity() as MainActivity).updateActionBarTitle(getString(R.string.queue_title))
 
         comm = requireActivity() as DataTransfer
 
@@ -184,7 +179,7 @@ class QueueFragment : Fragment(), QueueAdapter.OnItemClickListener {
      */
     private fun sendData() {
         if (!comm.isConnected())
-            Toast.makeText(requireContext(), "Device not connected!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.device_not_connected), Toast.LENGTH_SHORT).show()
         else if (!checkValid())
             Toast.makeText(requireContext(), "Incorrect time sequence!", Toast.LENGTH_SHORT).show()
         else

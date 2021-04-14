@@ -18,7 +18,6 @@ import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.ledpanel.led_panel_control_app.DataTransfer
 import com.ledpanel.led_panel_control_app.MainActivity
 import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutText
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
 import com.ledpanel.led_panel_control_app.setBackgroundColor
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
@@ -54,7 +53,7 @@ class TextFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
+        (requireActivity() as MainActivity).updateActionBarTitle(getString(R.string.text_title))
 
         comm = requireActivity() as DataTransfer
 
@@ -131,7 +130,7 @@ class TextFragment : Fragment() {
 
                 data?.let { comm.sendData(it) }
             }
-        } else Toast.makeText(requireContext(), "Device not connected!", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(requireContext(), getString(R.string.device_not_connected), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -142,7 +141,7 @@ class TextFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create(TAG, aboutText)
+                val fragment = AboutFragment.create(getString(R.string.about_text_title), getString(R.string.about_text_description))
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutText")
@@ -151,9 +150,5 @@ class TextFragment : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    companion object {
-        private const val TAG = "Text"
     }
 }

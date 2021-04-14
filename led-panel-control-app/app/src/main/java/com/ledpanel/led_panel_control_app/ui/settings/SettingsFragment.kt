@@ -15,7 +15,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ledpanel.led_panel_control_app.DataTransfer
 import com.ledpanel.led_panel_control_app.MainActivity
 import com.ledpanel.led_panel_control_app.R
-import com.ledpanel.led_panel_control_app.aboutSettings
 import com.ledpanel.led_panel_control_app.databinding.FragmentSettingsBinding
 import com.ledpanel.led_panel_control_app.hideKeyboard
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
@@ -34,8 +33,6 @@ class SettingsFragment : Fragment() {
                 arguments = extras
             }
         }
-
-        private const val TAG = "Settings"
     }
 
     // Data binding
@@ -71,7 +68,7 @@ class SettingsFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.about -> {
-                val fragment = AboutFragment.create(TAG, aboutSettings)
+                val fragment = AboutFragment.create(getString(R.string.about_settings_title), getString(R.string.about_settings_description))
                 requireActivity().supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutSettings")
@@ -85,7 +82,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as MainActivity).updateActionBarTitle(TAG)
+        (requireActivity() as MainActivity).updateActionBarTitle(getString(R.string.settings_title))
 
         // Creating SettingsViewModel object with TextViewModelFactory
         settingsViewModel = ViewModelProvider(this, SettingsViewModelFactory())
@@ -94,6 +91,13 @@ class SettingsFragment : Fragment() {
         binding.settingsViewModel = settingsViewModel
 
         binding.lifecycleOwner = this
+
+        settingsViewModel.deviceName.observe(
+            viewLifecycleOwner,
+            { newName ->
+                binding.fragmentSettingsTvName.text = if (newName.isNotEmpty()) newName else getString(R.string.no_connected_devices_text)
+            }
+        )
 
         binding.fragmentSettingsEtWidth.setText(requireArguments().getInt("width").toString())
         binding.fragmentSettingsEtHeight.setText(requireArguments().getInt("height").toString())
@@ -104,10 +108,10 @@ class SettingsFragment : Fragment() {
             // List of device names
             val deviceNames = (activity as MainActivity).getDevicesNames(true)
             when (deviceNames.size) {
-                0 -> Toast.makeText(requireContext(), "No paired devices found!", Toast.LENGTH_SHORT).show()
+                0 -> Toast.makeText(requireContext(), getString(R.string.no_paired_devices_text), Toast.LENGTH_SHORT).show()
 
                 else -> MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Paired Bluetooth Devices")
+                    .setTitle(getString(R.string.paired_devices_text))
                     .setItems(deviceNames.toTypedArray()) { _, which ->
                         comm.sendDeviceId(which, true)
                         val deviceName = deviceNames[which].substringBeforeLast("MAC: ")
@@ -122,9 +126,9 @@ class SettingsFragment : Fragment() {
         binding.fragmentSettingsBtnSave.setOnClickListener {
             try {
                 comm.setSize(binding.fragmentSettingsEtWidth.text.toString().toInt(), binding.fragmentSettingsEtWidth.text.toString().toInt())
-                Toast.makeText(requireContext(), "Successfully saved!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.saved_text), Toast.LENGTH_SHORT).show()
             } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), "Incorrect size!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.incorrect_size_text), Toast.LENGTH_SHORT).show()
             } finally {
                 hideKeyboard()
             }

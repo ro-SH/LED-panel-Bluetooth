@@ -3,6 +3,7 @@ package com.ledpanel.led_panel_control_app.ui.settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ledpanel.led_panel_control_app.R
 
 /**
  *  ViewModel for SettingsFragment
@@ -37,7 +38,7 @@ class SettingsViewModel : ViewModel() {
      *  Delete Device Data
      */
     fun deleteDeviceData() {
-        _deviceName.value = "No Connected Device"
+        _deviceName.value = ""
         _deviceAddress.value = ""
     }
 }
