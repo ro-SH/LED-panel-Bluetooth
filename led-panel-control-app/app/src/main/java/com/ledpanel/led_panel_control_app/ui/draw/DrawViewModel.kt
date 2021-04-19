@@ -15,8 +15,14 @@ class DrawViewModel : ViewModel() {
     var width: Int = 0
     var height: Int = 0
 
+    // Current draw mode
+    private val _drawMode = MutableLiveData<Int>()
+    val drawMode: LiveData<Int>
+        get() = _drawMode
+
     init {
-        _color.value = Color.WHITE
+        setColor(Color.WHITE)
+        setDrawMode(DRAW)
     }
 
     /**
@@ -25,5 +31,13 @@ class DrawViewModel : ViewModel() {
      */
     fun setColor(newColor: Int) {
         _color.value = newColor
+    }
+
+    /**
+     *  Set new draw mode
+     *  @param newMode
+     */
+    fun setDrawMode(newMode: Int) {
+        _drawMode.value = newMode
     }
 }

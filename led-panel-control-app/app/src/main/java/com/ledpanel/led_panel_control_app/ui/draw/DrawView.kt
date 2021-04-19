@@ -40,9 +40,6 @@ class DrawView(
     private var pixelWidth: Int? = null
     private var pixelHeight: Int? = null
 
-    // Current drawing mode
-    private var drawMode = DRAW
-
     // Set up the paint with which to draw.
     private var paint = Paint().apply {
         color = gridColor
@@ -54,20 +51,6 @@ class DrawView(
         strokeJoin = Paint.Join.ROUND // default: MITER
         strokeCap = Paint.Cap.ROUND // default: BUTT
         strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
-    }
-
-    /**
-     *  Returns current draw mode
-     */
-    fun getDrawMode() = drawMode
-
-    /**
-     *  Set new draw mode
-     *  @param mode
-     */
-    fun setDrawMode(mode: Int) {
-        if (mode == ERASE || mode == DRAW)
-            drawMode = mode
     }
 
     /**
@@ -154,7 +137,7 @@ class DrawView(
      *  @param currentY
      *  @return Pair of coordinates of current pixel
      */
-    fun fillPixel(currentX: Float, currentY: Float): Pair<Int, Int>? {
+    fun fillPixel(mode: Int, currentX: Float, currentY: Float): Pair<Int, Int>? {
 
         if (extraCanvas.width % currentX == 0F || extraCanvas.height % currentY == 0F)
             return null
@@ -185,7 +168,7 @@ class DrawView(
         }
         val rect = Rect(startX, startY, endX, endY)
 
-        when (drawMode) {
+        when (mode) {
             DRAW -> {
                 extraCanvas.drawRect(
                     rect,
@@ -208,6 +191,9 @@ class DrawView(
         drawGrid()
 
         invalidate()
-        return Pair(pixelX, pixelY)
+
+        if (pixelX == cols) pixelX.minus(1)
+        if (pixelY == rows) pixelY.minus(1)
+        return Pair(pixelX, rows - pixelY - 1)
     }
 }

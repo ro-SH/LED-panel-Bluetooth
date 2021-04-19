@@ -3,7 +3,6 @@ package com.ledpanel.led_panel_control_app.ui.settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ledpanel.led_panel_control_app.R
 
 /**
  *  ViewModel for SettingsFragment
@@ -30,8 +29,9 @@ class SettingsViewModel : ViewModel() {
      *  @param address New device address
      */
     fun setDeviceData(name: String, address: String) {
-        _deviceName.value = "Device Name: $name"
-        _deviceAddress.value = "MAC: $address"
+        _deviceName.value = name
+        if (address.isNotEmpty())
+            _deviceAddress.value = "MAC: $address"
     }
 
     /**

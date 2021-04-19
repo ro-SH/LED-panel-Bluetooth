@@ -23,10 +23,13 @@ import java.lang.NumberFormatException
 class SettingsFragment : Fragment() {
 
     companion object {
-        fun create(width: Int, height: Int): SettingsFragment {
+        fun create(deviceName: String, deviceAddress: String, width: Int, height: Int, brightness: Int): SettingsFragment {
             val extras = Bundle().apply {
+                putString("name", deviceName)
+                putString("address", deviceAddress)
                 putInt("width", width)
                 putInt("height", height)
+                putInt("brightness", brightness)
             }
 
             return SettingsFragment().apply {
@@ -92,15 +95,23 @@ class SettingsFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
+        // Device name
         settingsViewModel.deviceName.observe(
             viewLifecycleOwner,
             { newName ->
-                binding.fragmentSettingsTvName.text = if (newName.isNotEmpty()) newName else getString(R.string.no_connected_devices_text)
+                binding.fragmentSettingsTvName.text = if (newName.isNotEmpty()) "${getString(R.string.device_name)} $newName" else getString(R.string.no_connected_devices_text)
             }
+        )
+
+        // Set device name and address
+        settingsViewModel.setDeviceData(
+            requireArguments().getString("name")!!,
+            requireArguments().getString("address")!!
         )
 
         binding.fragmentSettingsEtWidth.setText(requireArguments().getInt("width").toString())
         binding.fragmentSettingsEtHeight.setText(requireArguments().getInt("height").toString())
+        binding.fragmentSettingsEtBrightness.setText(requireArguments().getInt("brightness").toString())
 
         // Connect Button
         binding.fragmentSettingsBtnConnect.setOnClickListener {
@@ -114,30 +125,61 @@ class SettingsFragment : Fragment() {
                     .setTitle(getString(R.string.paired_devices_text))
                     .setItems(deviceNames.toTypedArray()) { _, which ->
                         comm.sendDeviceId(which, true)
-                        val deviceName = deviceNames[which].substringBeforeLast("MAC: ")
+                        val deviceName = deviceNames[which].substringBeforeLast("\nMAC: ")
                         val deviceAddress = deviceNames[which].substringAfterLast("MAC: ")
                         settingsViewModel.setDeviceData(deviceName, deviceAddress)
+                        comm.setDeviceData(deviceName, deviceAddress)
                     }
                     .show()
             }
         }
 
         // Save Button
-        binding.fragmentSettingsBtnSave.setOnClickListener {
-            try {
-                comm.setSize(binding.fragmentSettingsEtWidth.text.toString().toInt(), binding.fragmentSettingsEtWidth.text.toString().toInt())
-                Toast.makeText(requireContext(), getString(R.string.saved_text), Toast.LENGTH_SHORT).show()
-            } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), getString(R.string.incorrect_size_text), Toast.LENGTH_SHORT).show()
-            } finally {
-                hideKeyboard()
-            }
-        }
+        binding.fragmentSettingsBtnSave.setOnClickListener { onSaveClicked() }
 
         // disconnect Button
         binding.fragmentSettingsBtnDisconnect.setOnClickListener {
             comm.disconnectDevice()
             settingsViewModel.deleteDeviceData()
+        }
+    }
+
+    /**
+     *  Send configuration data.
+     */
+    private fun onSaveClicked() {
+        try {
+            val width: Int = binding.fragmentSettingsEtWidth.text.toString().toInt()
+            val height: Int = binding.fragmentSettingsEtHeight.text.toString().toInt()
+            val brightness: Int = binding.fragmentSettingsEtBrightness.text.toString().toInt()
+            if (width <= 0 || height <= 0)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.size_restriction_text),
+                    Toast.LENGTH_SHORT
+                ).show()
+            else if (brightness < 0 || brightness > 255)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.brightness_restriction_text),
+                    Toast.LENGTH_SHORT
+                ).show()
+            else {
+                comm.setConfiguration(width, height, brightness)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.saved_text),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } catch (e: NumberFormatException) {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.incorrect_size_text),
+                Toast.LENGTH_SHORT
+            ).show()
+        } finally {
+            hideKeyboard()
         }
     }
 }

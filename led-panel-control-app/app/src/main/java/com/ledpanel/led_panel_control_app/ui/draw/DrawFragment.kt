@@ -103,6 +103,19 @@ class DrawFragment : Fragment() {
 
         binding.fragmentDrawCanvasLayout.addView(drawView)
 
+        // Draw Mode
+        viewModel.drawMode.observe(
+            viewLifecycleOwner,
+            { newMode ->
+                val newText = "Mode: " + when (newMode) {
+                    DRAW -> "Draw"
+                    ERASE -> "Erase"
+                    else -> ""
+                }
+                binding.fragmentSettingsTvMode?.text = newText
+            }
+        )
+
         // Drawing
         drawView.setOnTouchListener { _, event -> return@setOnTouchListener onDrawViewTouch(event) }
 
@@ -135,10 +148,12 @@ class DrawFragment : Fragment() {
         binding.fragmentDrawIbFill.setOnClickListener { onFillClicked() }
 
         // Draw Button
-        binding.fragmentDrawIbDraw.setOnClickListener { drawView.setDrawMode(DRAW) }
+        binding.fragmentDrawIbDraw.setOnClickListener {
+            viewModel.setDrawMode(DRAW)
+        }
 
         // Erase Button
-        binding.fragmentDrawIbErase.setOnClickListener { drawView.setDrawMode(ERASE) }
+        binding.fragmentDrawIbErase.setOnClickListener { viewModel.setDrawMode(ERASE) }
     }
 
     /**
@@ -162,6 +177,8 @@ class DrawFragment : Fragment() {
             )
     }
 
+    private var saved_data = ""
+
     /**
      *  On DrawViewTouch.
      *  Performs drawing.
@@ -170,9 +187,10 @@ class DrawFragment : Fragment() {
     private fun onDrawViewTouch(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                val coordinates: Pair<Int, Int>? = drawView.fillPixel(event.x, event.y)
+//            MotionEvent.ACTION_DOWN -> {
+                val coordinates: Pair<Int, Int>? = drawView.fillPixel(viewModel.drawMode.value!!, event.x, event.y)
                 if (coordinates != null && comm.isConnected()) {
-                    val data = when (drawView.getDrawMode()) {
+                    val data = when (viewModel.drawMode.value) {
                         DRAW -> {
                             val red = Color.red(viewModel.color.value!!)
                             val green = Color.green(viewModel.color.value!!)
@@ -182,8 +200,10 @@ class DrawFragment : Fragment() {
 
                         else -> "d+${coordinates.first}+${coordinates.second}+0+0+0+|"
                     }
-
-                    comm.sendData(data)
+                    if (data != saved_data) {
+                        comm.sendData(data)
+                        saved_data = data
+                    }
                 }
             }
         }

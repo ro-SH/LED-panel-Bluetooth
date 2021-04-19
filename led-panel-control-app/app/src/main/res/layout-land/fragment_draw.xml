@@ -24,6 +24,15 @@
 
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/fragment_settings__tv_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Mode: Draw"
+            app:layout_constraintStart_toEndOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintTop_toTopOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <Button
             android:id="@+id/fragment_draw__btn_color"
             style="@style/button"
@@ -83,9 +92,9 @@
             android:src="@drawable/ic_clear"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__cv_canvas"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/fragment_draw__ib_erase"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_draw__ib_fill" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_draw__ib_fill"
+            app:layout_goneMarginTop="30dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

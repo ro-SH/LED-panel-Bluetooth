@@ -1,5 +1,6 @@
 package com.ledpanel.led_panel_control_app
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,14 +14,19 @@ import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
 
-const val DEFAULT_WIDTH = 32
 const val DEFAULT_HEIGHT = 8
+const val DEFAULT_WIDTH = 32
+const val DEFAULT_BRIGHTNESS = 50
 
 class MainActivity : AppCompatActivity(), DataTransfer {
+    // Bluetooth data
+    private var deviceName: String = ""
+    private var deviceAddress: String = ""
 
-    // Panel size
+    // Panel configuration
     private var width: Int = DEFAULT_WIDTH
     private var height: Int = DEFAULT_HEIGHT
+    private var brightness: Int = DEFAULT_BRIGHTNESS
 
     private val manager = supportFragmentManager
 
@@ -68,7 +74,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
      *  Create SettingsFragment instance if not created. Switch to SettingsFragment.
      */
     private fun createSettingsFragment() {
-        if (settingsFragment == null) settingsFragment = SettingsFragment.create(width, height)
+        if (settingsFragment == null) settingsFragment = SettingsFragment.create(deviceName, deviceAddress, width, height, brightness)
         switchFragments(settingsFragment)
     }
 
@@ -181,7 +187,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
                 val newTime = getCurrentTime()
                 if (newTime != currentTime) {
                     currentTime = newTime
-                    val data = "s+$red+$green+$blue+$currentTime+|"
+                    val data = "s+$red+$green+$blue+$currentTime+0+|"
                     btConnection.sendCommand(data)
                 }
             }
@@ -213,7 +219,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
                         val newTime = getCurrentTime()
                         if (tempQueue[0].time == newTime) {
                             val text = tempQueue[0].text
-                            val data = "s+$red+$green+$blue+$newTime $text+|"
+                            val data = "s+$red+$green+$blue+$newTime $text+0+|"
                             btConnection.sendCommand(data)
                             tempQueue.removeAt(0)
                         }
@@ -223,7 +229,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
             else -> {
                 val text = queue[0].text
-                val data = "s+$red+$green+$blue+$text+|"
+                val data = "s+$red+$green+$blue+$text+0+|"
                 btConnection.sendCommand(data)
             }
         }
@@ -264,20 +270,25 @@ class MainActivity : AppCompatActivity(), DataTransfer {
         return btConnection.isConnected()
     }
 
+    override fun setDeviceData(name: String, address: String) {
+        deviceName = name
+        deviceAddress = address
+    }
+
     /**
      *  Set new panel size.
      *  @param width
      *  @param height
+     *  @param brightness
      */
-    override fun setSize(width: Int, height: Int) {
+    override fun setConfiguration(width: Int, height: Int, brightness: Int) {
         this.width = width
         this.height = height
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (btConnection.isConnected())
-            btConnection.cleanUp()
+        this.brightness = brightness
+//        if (btConnection.isConnected()) {
+//            val data = "c+$width+$height+$brightness+|"
+//            sendData(data)
+//        }
     }
 
     /**

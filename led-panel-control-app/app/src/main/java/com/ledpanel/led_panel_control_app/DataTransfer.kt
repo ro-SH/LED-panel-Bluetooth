@@ -25,11 +25,19 @@ interface DataTransfer {
     fun sendDeviceId(deviceID: Int, isPaired: Boolean)
 
     /**
-     *  Set new LED panel size
+     *  Set new device data.
+     *  @param name
+     *  @param address
+     */
+    fun setDeviceData(name: String, address: String)
+
+    /**
+     *  Set new LED panel configuration
      *  @param width
      *  @param height
+     *  @param brightness
      */
-    fun setSize(width: Int, height: Int)
+    fun setConfiguration(width: Int, height: Int, brightness: Int)
 
     /**
      *  Send Data bia Bluetooth

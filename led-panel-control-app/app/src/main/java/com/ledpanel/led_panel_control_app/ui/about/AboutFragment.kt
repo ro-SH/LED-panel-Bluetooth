@@ -1,5 +1,7 @@
 package com.ledpanel.led_panel_control_app.ui.about
 
+import android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +43,10 @@ class AboutFragment : Fragment() {
         (requireActivity() as MainActivity).updateActionBarTitle(requireArguments().getString("mainFragmentName")!!)
 
         // Set description
-        view.findViewById<TextView>(R.id.fragment_about__tv_description).text = requireArguments().getString("text")
+        val tvDescription = view.findViewById<TextView>(R.id.fragment_about__tv_description)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            tvDescription.justificationMode = JUSTIFICATION_MODE_INTER_WORD
+        }
+        tvDescription.text = requireArguments().getString("text")
     }
 }

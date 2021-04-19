@@ -24,15 +24,25 @@
 
         </androidx.cardview.widget.CardView>
 
+        <TextView
+            android:id="@+id/fragment_settings__tv_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Mode: Draw"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
+
         <Button
             android:id="@+id/fragment_draw__btn_color"
             style="@style/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__tv_mode"
             app:layout_constraintStart_toStartOf="@id/fragment_draw__cv_canvas"
             app:layout_constraintEnd_toEndOf="@id/fragment_draw__cv_canvas"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:text="@string/pick_color_text"
             app:cornerRadius="@dimen/button_corner_radius"
             app:strokeColor="@color/gray_200"

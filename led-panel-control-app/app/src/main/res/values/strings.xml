@@ -55,4 +55,7 @@
     <string name="about_draw_description">Draw description</string>
     <string name="about_queue_description">Queue description</string>
     <string name="about_settings_description">Settings description</string>
+    <string name="brightness_text">Brightness:</string>
+    <string name="size_restriction_text">Size must be greater than 0!</string>
+    <string name="brightness_restriction_text">Brightness must be between 0 and 255!</string>
 </resources>
