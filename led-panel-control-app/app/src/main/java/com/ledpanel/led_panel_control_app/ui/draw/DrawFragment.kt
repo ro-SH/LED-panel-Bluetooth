@@ -112,7 +112,7 @@ class DrawFragment : Fragment() {
                     ERASE -> "Erase"
                     else -> ""
                 }
-                binding.fragmentSettingsTvMode?.text = newText
+                binding.fragmentSettingsTvMode.text = newText
             }
         )
 

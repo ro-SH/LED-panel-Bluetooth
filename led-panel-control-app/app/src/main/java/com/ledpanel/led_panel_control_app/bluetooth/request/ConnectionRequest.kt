@@ -45,8 +45,10 @@ class ConnectionRequest(private val context: Context, private val eventListener:
      *  Disconnect device
      */
     fun stopConnect() {
-        if (isConnected())
+        if (isConnected()) {
             connectionThread?.cancel()
+            connectionThread = null
+        }
     }
 
     /**

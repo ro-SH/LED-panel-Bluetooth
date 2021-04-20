@@ -13,10 +13,11 @@ import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
+import kotlinx.coroutines.delay
 
 const val DEFAULT_HEIGHT = 8
 const val DEFAULT_WIDTH = 32
-const val DEFAULT_BRIGHTNESS = 50
+const val DEFAULT_BRIGHTNESS = 100
 
 class MainActivity : AppCompatActivity(), DataTransfer {
     // Bluetooth data
@@ -167,8 +168,11 @@ class MainActivity : AppCompatActivity(), DataTransfer {
     override fun disconnectDevice() {
         if (btConnection.isConnected()) {
             stopPassing()
-            btConnection.sendCommand("0+0+0+ +|")
-            btConnection.stopConnectDevice()
+            Thread {
+                btConnection.sendCommand("f+0+0+0+|")
+                Thread.sleep(1000)
+                btConnection.stopConnectDevice()
+            }.start()
         }
     }
 
@@ -215,11 +219,11 @@ class MainActivity : AppCompatActivity(), DataTransfer {
             true -> {
                 val tempQueue = queue.toMutableList()
                 Thread {
-                    while (passQueue && tempQueue.size > 0) {
+                    while (passQueue && tempQueue.size > 1) {
                         val newTime = getCurrentTime()
                         if (tempQueue[0].time == newTime) {
                             val text = tempQueue[0].text
-                            val data = "s+$red+$green+$blue+$newTime $text+0+|"
+                            val data = "s+$red+$green+$blue+$newTime $text+1+|"
                             btConnection.sendCommand(data)
                             tempQueue.removeAt(0)
                         }
@@ -229,7 +233,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
 
             else -> {
                 val text = queue[0].text
-                val data = "s+$red+$green+$blue+$text+0+|"
+                val data = "s+$red+$green+$blue+$text+1+|"
                 btConnection.sendCommand(data)
             }
         }
