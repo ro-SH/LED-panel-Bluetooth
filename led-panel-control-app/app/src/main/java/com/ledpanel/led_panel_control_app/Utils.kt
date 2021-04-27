@@ -36,6 +36,28 @@ fun checkTime(time: String): Boolean {
 }
 
 /**
+ *  Format draw info for transferring.
+ */
+fun formatDrawInfo(
+    xCoord: Int,
+    yCoord: Int,
+    red: Int,
+    green: Int,
+    blue: Int,
+): String = "d+$xCoord+$yCoord+$red+$green+$blue+|"
+
+/**
+ *  Format string info for transferring.
+ */
+fun formatStringInfo(
+    red: Int,
+    green: Int,
+    blue: Int,
+    string: String,
+    speed: Double
+): String = "s+$red+$green+$blue+$string+$speed+|"
+
+/**
  *  Generate Test List of QueueItems
  *  @return List of QueueItems
  */

@@ -15,11 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.ledpanel.led_panel_control_app.DataTransfer
-import com.ledpanel.led_panel_control_app.MainActivity
-import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
-import com.ledpanel.led_panel_control_app.setBackgroundColor
 import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
 
 private const val STATIC = 0
@@ -123,8 +120,8 @@ class TextFragment : Fragment() {
                 val text = textViewModel.text.value
                 val speed = textViewModel.speed.value
                 val data = when (textViewModel.type.value) {
-                    STATIC -> "s+$red+$green+$blue+$text+0+|"
-                    ROLLER -> "s+$red+$green+$blue+$text+$speed+|"
+                    STATIC -> formatStringInfo(red, green, blue, text!!, 0.0)
+                    ROLLER -> formatStringInfo(red, green, blue, text!!, speed!!)
                     else -> null
                 }
 

@@ -24,7 +24,7 @@ class QueueViewModel : ViewModel() {
 
     // Current Queue to display
 //    private val queue: MutableList<QueueItem> = mutableListOf() // FROM DATABASE
-    private val _queue: MutableList<QueueItem> = generateList().toMutableList()
+    private val _queue: MutableList<QueueItem> = mutableListOf()
     // TODO ADD DATABASE
     val queue: List<QueueItem>
         get() = _queue

@@ -195,10 +195,10 @@ class DrawFragment : Fragment() {
                             val red = Color.red(viewModel.color.value!!)
                             val green = Color.green(viewModel.color.value!!)
                             val blue = Color.blue(viewModel.color.value!!)
-                            "d+${coordinates.first}+${coordinates.second}+$red+$green+$blue+|"
+                            formatDrawInfo(coordinates.first, coordinates.second, red, green, blue)
                         }
 
-                        else -> "d+${coordinates.first}+${coordinates.second}+0+0+0+|"
+                        else -> formatDrawInfo(coordinates.first, coordinates.second, 0, 0, 0)
                     }
                     if (data != saved_data) {
                         comm.sendData(data)

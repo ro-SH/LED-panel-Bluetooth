@@ -1,6 +1,5 @@
 package com.ledpanel.led_panel_control_app
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,7 +12,6 @@ import com.ledpanel.led_panel_control_app.ui.queue.QueueFragment
 import com.ledpanel.led_panel_control_app.ui.queue.QueueItem
 import com.ledpanel.led_panel_control_app.ui.settings.SettingsFragment
 import com.ledpanel.led_panel_control_app.ui.text.TextFragment
-import kotlinx.coroutines.delay
 
 const val DEFAULT_HEIGHT = 8
 const val DEFAULT_WIDTH = 32
@@ -191,7 +189,7 @@ class MainActivity : AppCompatActivity(), DataTransfer {
                 val newTime = getCurrentTime()
                 if (newTime != currentTime) {
                     currentTime = newTime
-                    val data = "s+$red+$green+$blue+$currentTime+0+|"
+                    val data = formatStringInfo(red, green, blue, currentTime, 0.0)
                     btConnection.sendCommand(data)
                 }
             }
@@ -219,11 +217,12 @@ class MainActivity : AppCompatActivity(), DataTransfer {
             true -> {
                 val tempQueue = queue.toMutableList()
                 Thread {
-                    while (passQueue && tempQueue.size > 1) {
+                    while (passQueue && tempQueue.size > 0) {
                         val newTime = getCurrentTime()
+                        println(getCurrentTime() + tempQueue[0].time)
                         if (tempQueue[0].time == newTime) {
                             val text = tempQueue[0].text
-                            val data = "s+$red+$green+$blue+$newTime $text+1+|"
+                            val data = formatStringInfo(red, green, blue, "$newTime $text", 1.0)
                             btConnection.sendCommand(data)
                             tempQueue.removeAt(0)
                         }
@@ -232,9 +231,11 @@ class MainActivity : AppCompatActivity(), DataTransfer {
             }
 
             else -> {
-                val text = queue[0].text
-                val data = "s+$red+$green+$blue+$text+1+|"
-                btConnection.sendCommand(data)
+                if (queue.isNotEmpty()) {
+                    val text = queue[0].text
+                    val data = formatStringInfo(red, green, blue, text, 1.0)
+                    btConnection.sendCommand(data)
+                }
             }
         }
     }
