@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">LED Panel Control</string>
+    <string name="text_title">Вывод текста</string>
+    <string name="draw_title">Рисование</string>
+    <string name="queue_title">Вывод очереди</string>
+    <string name="settings_title">Настройки</string>
+    <string name="string_type_text">Тип строки</string>
+    <string name="display_text">Показать</string>
+
+    <string-array name="string_types">
+        <item>Статичная</item>
+        <item>Динамичная</item>
+        <item>Текущее время</item>
+    </string-array>
+
+    <string-array name="queue_types">
+        <item>Очередь</item>
+        <item>Расписание</item>
+    </string-array>
+
+    <string name="about_title">Описание</string>
+    <string name="enter_text_hint">Введите текст…</string>
+    <string name="pick_color_text">Цвет</string>
+    <string name="speed_format">Скорость: x%s</string>
+    <string name="queue_type_text">Тип</string>
+
+    <string name="time_text">Время</string>
+    <string name="item_text">Пункт</string>
+    <string name="time_image_description">Time Image</string>
+    <string name="item_image_description">Item Image</string>
+    <string name="add_button_text">Добавить</string>
+    <string name="connect_bt">Соединить</string>
+
+    <string name="clear_text">Очистить</string>
+    <string name="edit_text">Редактировать</string>
+
+    <string name="disconnect_bt">Отсоединить</string>
+    <string name="add_text">Добавить</string>
+    <string name="skip_text">Пропустить</string>
+    <string name="width_text">Ширина:</string>
+    <string name="height_text">Высота:</string>
+    <string name="save_text">Сохранить</string>
+    <string name="device_not_connected">Устройство не подключено!</string>
+    <string name="saved_text">Сохранено!</string>
+    <string name="incorrect_size_text">Некорректные размеры!</string>
+    <string name="no_paired_devices_text">Нет сопряжённых устройств!</string>
+    <string name="paired_devices_text">Сопряжённые устройства</string>
+    <string name="no_connected_devices_text">Устройство не подключено</string>
+    <string name="device_name">Устройство:</string>
+    <string name="about_text_title">Описание вывода текста</string>
+    <string name="about_draw_title">Описание рисования</string>
+    <string name="about_queue_title">Описание очереди</string>
+    <string name="about_settings_title">Описание настроек</string>
+    <string name="about_text_description">Вывод текста на LED-панель.\n\nВыберите тип выводимой строки из предложенных, нажав на выпадающее меню.\n\nВыберите цвет, нажав на кнопку "Цвет" и выбрав в диалогово окне цвет. Кнопка поменяет цвет фона на выбранный.\n\nВведите текст в соответствующее поле.\n\nВыберите скорость отображения, двигая ползунок выбора скорости.\n\nПосле ввода всей информации нажмите кнопку "Показать" для отображения информации на LED-панели.</string>
+    <string name="about_draw_description">Рисование.\n\nВыберите режим рисования/стирания, нажам соответствующую кнопку. Текущий режим рисования указан текстом.\n\nВыберите цвет, нажав на кнопку "Цвет" и выбрав в диалогово окне цвет. Кнопка поменяет цвет фона на выбранный.\n\nПри наведении на панель светодиоды начнут загораться/гаснуть.\n\nДля заливки выбранным цветом или очистки панели нажмите на соответствующую кнопку.</string>
+    <string name="about_queue_description">Вывод очереди/расписания.\n\nВыберите очередь или расписание в выпадающем меню. Очередь содержит в себе текст, который менятся на панели при нажатии кнопки "Пропустить". Расписание содержит время и текст, которые меняются, когда наступит время. Время в расписании обязательно должно идти друг за другом.\n\nДля добавления новой записи воспользуйтесь "Плюсиком" и введите информацию в диалоговом окне. Для добавления нажмите "Добавить".\n\nДля исправления записи нажмите на неё и введите новую информацию в диалоговом окне, далее нажмите "Редактировать". Для удаления записи нажмите на знак "Урны".\n\nВыберите цвет, нажав на кнопку "Цвет" и выбрав в диалогово окне цвет. Кнопка поменяет цвет фона на выбранный.\n\nДля вывода на LED-панель нажмите кнопку "Показать". Для очистки списка нажмите кнопку "Очистить".\n\n</string>
+    <string name="about_settings_description">Настройки.\n\nДля подключения к сопряжённому устройству нажмите на кнопку "Соединить". В диалоговом окне появится список сопряжённых устройств. Для выбора нажмите на устройство. Далее при успешном подключении информация об устройстве появится на экране. Для отключения от устройства нажмите на кнопку "Отсоединить".\n\nНа экране можно настроить размеры панели, а также яркость светодиодов. После ввода данных нажмите кнопку "Сохранить".</string>
+    <string name="brightness_text">Яркость:</string>
+    <string name="size_restriction_text">Размеры должны быть больше 0!</string>
+    <string name="brightness_restriction_text">Яркость должна быть между 0 и 255!</string>
+</resources>

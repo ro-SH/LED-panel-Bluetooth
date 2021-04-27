@@ -1,30 +1,37 @@
 package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Button
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.github.dhaval2404.colorpicker.util.ColorUtil
-import com.ledpanel.led_panel_control_app.DataTransfer
-import com.ledpanel.led_panel_control_app.R
+import com.ledpanel.led_panel_control_app.*
 import com.ledpanel.led_panel_control_app.databinding.FragmentTextBinding
+import com.ledpanel.led_panel_control_app.ui.about.AboutFragment
+
+private const val STATIC = 0
+private const val ROLLER = 1
+private const val TIME = 2
 
 class TextFragment : Fragment() {
 
-    private lateinit var comm: DataTransfer
+    // Data Binding
+    private lateinit var binding: FragmentTextBinding
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("TextFragment", "OnDestrView")
-    }
+    // ViewModel for TextFragment
+    private lateinit var textViewModel: TextViewModel
+
+    private lateinit var comm: DataTransfer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,15 +39,23 @@ class TextFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        Log.i("TextFragment", "OnCreateView")
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_text, container, false
+        )
+
+        setHasOptionsMenu(true)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as MainActivity).updateActionBarTitle(getString(R.string.text_title))
 
         comm = requireActivity() as DataTransfer
 
-        val binding: FragmentTextBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_text, container, false)
-
         // Creating TextViewModel object with TextViewModelFactory
-        val textViewModel = ViewModelProvider(this, TextViewModelFactory())
+        textViewModel = ViewModelProvider(this, TextViewModelFactory())
             .get(TextViewModel::class.java)
 
         // Data Binding
@@ -49,57 +64,70 @@ class TextFragment : Fragment() {
         // Live Data Binding
         binding.lifecycleOwner = this
 
-        binding.stringTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        // Select Type Spinner
+        binding.fragmentTextSpinnerType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 textViewModel.setType(parent!!.selectedItemPosition)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {  }
+            override fun onNothingSelected(parent: AdapterView<*>?) { }
         }
 
         // Color Button
-        binding.colorButton.setOnClickListener { _ ->
+        binding.fragmentTextBtnColor.setOnClickListener {
 
             // Open the Color Picker Dialog
             ColorPickerDialog
-                    .Builder(requireActivity()) // Pass Activity Instance
-                    .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
-                    .setDefaultColor(textViewModel.color.value!!) // Pass Default Color
-                    .setColorListener { color, _ ->
-                        textViewModel.setColor(color)
-                    }
-                    .show()
+                .Builder(requireActivity()) // Pass Activity Instance
+                .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+                .setDefaultColor(textViewModel.color.value!!) // Pass Default Color
+                .setColorListener { color, _ ->
+                    textViewModel.setColor(color)
+                }
+                .show()
         }
 
-        textViewModel.color.observe(viewLifecycleOwner, { newColor ->
-            setBackgroundColor(binding.colorButton, newColor)
-        })
+        textViewModel.color.observe(
+            viewLifecycleOwner,
+            { newColor ->
+                setBackgroundColor(binding.fragmentTextBtnColor, newColor)
+            }
+        )
 
         // Speed Slider
-        binding.speedSlider.addOnChangeListener { _, value, _ ->
+        binding.fragmentTextSliderSpeed.addOnChangeListener { _, value, _ ->
             textViewModel.setSpeed(value)
         }
 
-        binding.displayButton.setOnClickListener {
+        // Display Button
+        binding.displayButton.setOnClickListener { onDisplayButtonClick() }
+    }
+
+    /**
+     *  Called when the display button is pressed.
+     *  Send information via Bluetooth.
+     */
+    private fun onDisplayButtonClick() {
+        if (comm.isConnected()) {
+
             val red = Color.red(textViewModel.color.value!!)
             val green = Color.green(textViewModel.color.value!!)
             val blue = Color.blue(textViewModel.color.value!!)
-            val text = textViewModel.text.value
-            val data = "$red+$green+$blue+$text+|"
-            comm.sendData(data)
-        }
 
-        setHasOptionsMenu(true)
-        return binding.root
-    }
+            if (textViewModel.type.value == TIME)
+                comm.showTime(red, green, blue)
+            else {
+                val text = textViewModel.text.value
+                val speed = textViewModel.speed.value
+                val data = when (textViewModel.type.value) {
+                    STATIC -> formatStringInfo(red, green, blue, text!!, 0.0)
+                    ROLLER -> formatStringInfo(red, green, blue, text!!, speed!!)
+                    else -> null
+                }
 
-    private fun setBackgroundColor(button: Button, newColor: Int) {
-        if (ColorUtil.isDarkColor(newColor)) {
-            button.setTextColor(Color.WHITE)
-        } else {
-            button.setTextColor(Color.BLACK)
-        }
-        button.setBackgroundColor(newColor)
+                data?.let { comm.sendData(it) }
+            }
+        } else Toast.makeText(requireContext(), getString(R.string.device_not_connected), Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -109,7 +137,14 @@ class TextFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.about -> this.findNavController().navigate(R.id.action_navigation_text_to_navigation_about)
+            R.id.about -> {
+                val fragment = AboutFragment.create(getString(R.string.about_text_title), getString(R.string.about_text_description))
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.activity_main__nav_host_fragment, fragment, "AboutText")
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

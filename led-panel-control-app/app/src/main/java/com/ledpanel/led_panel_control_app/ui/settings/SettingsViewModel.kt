@@ -29,15 +29,16 @@ class SettingsViewModel : ViewModel() {
      *  @param address New device address
      */
     fun setDeviceData(name: String, address: String) {
-        _deviceName.value = "Device Name: $name"
-        _deviceAddress.value = "MAC: $address"
+        _deviceName.value = name
+        if (address.isNotEmpty())
+            _deviceAddress.value = "MAC: $address"
     }
 
     /**
      *  Delete Device Data
      */
     fun deleteDeviceData() {
-        _deviceName.value = "No Connected Device"
+        _deviceName.value = ""
         _deviceAddress.value = ""
     }
 }

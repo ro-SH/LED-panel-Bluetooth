@@ -1,6 +1,5 @@
 package com.ledpanel.led_panel_control_app.bluetooth
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.ledpanel.led_panel_control_app.bluetooth.request.ConnectionRequest
 import com.ledpanel.led_panel_control_app.bluetooth.request.DiscoverRequest
@@ -48,7 +47,7 @@ class BluetoothConnection(val context: Context) {
      *  Pair to Bluetooth device
      *  @param deviceId Device ID in device list
      */
-    fun pairDevice(deviceId : Int) {
+    fun pairDevice(deviceId: Int) {
         val device = discoverRequest.getDevice(deviceId)
         pairRequest.pair(device)
     }

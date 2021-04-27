@@ -6,7 +6,7 @@
         <item name="android:layout_height">@dimen/display_button_height</item>
         <item name="android:layout_marginStart">105dp</item>
         <item name="android:layout_marginEnd">105dp</item>
-        <item name="android:layout_marginBottom">80dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textColor">@color/display_button_text_color</item>
         <item name="android:textSize">@dimen/display_button_text_size</item>
@@ -30,6 +30,12 @@
         <item name="android:importantForAutofill">no</item>
         <item name="android:textColor">@color/gray_900</item>
         <item name="android:textSize">@dimen/main_text_size</item>
+    </style>
+
+    <style name="queue_item_text">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/gray_900</item>
     </style>
 
 </resources>

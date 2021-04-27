@@ -11,15 +11,15 @@ import com.ledpanel.led_panel_control_app.bluetooth.IBluetoothEventListener
 /**
  *  Class for discovering new devices
  */
-class DiscoverRequest(private val context : Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest  {
+class DiscoverRequest(private val context: Context, private val eventListener: IBluetoothEventListener) : IBluetoothRequest {
 
     // List of discovered devices
-    private var discoveredDevices:MutableList<BluetoothDevice> = mutableListOf()
+    private var discoveredDevices: MutableList<BluetoothDevice> = mutableListOf()
 
     // List of paired devices
     private var pairedDevices: MutableList<BluetoothDevice> = mutableListOf()
 
-    private var bluetoothAdapter : BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
     private val discoverReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

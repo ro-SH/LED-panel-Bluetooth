@@ -16,53 +16,134 @@
         tools:context=".ui.settings.SettingsFragment">
 
         <Button
-            android:id="@+id/connect_button"
+            android:id="@+id/fragment_settings__btn_connect"
+            style="@style/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/connect_bt"
+            app:cornerRadius="@dimen/button_corner_radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:cornerRadius="@dimen/button_corner_radius"
             app:strokeColor="@color/gray_200"
-            app:strokeWidth="@dimen/stroke_width"
-            style="@style/button" />
+            app:strokeWidth="@dimen/stroke_width" />
 
         <TextView
-            android:id="@+id/device_name_text"
+            android:id="@+id/fragment_settings__tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@{settingsViewModel.deviceName}"
-            tools:text="Device Name: HC-05"
-            app:layout_constraintTop_toBottomOf="@id/connect_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__btn_connect"
+            tools:text="Device Name: HC-05" />
 
         <TextView
-            android:id="@+id/device_address_text"
+            android:id="@+id/fragment_settings__tv_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@{settingsViewModel.deviceAddress}"
-            tools:text="MAC: 30:C0:1B:FB:9A:B5"
-            app:layout_constraintTop_toBottomOf="@id/device_name_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <Button
-            android:id="@+id/disconnect_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
-            android:text="@string/disconnect_bt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__tv_name"
+            tools:text="MAC: 30:C0:1B:FB:9A:B5" />
+
+        <EditText
+            android:id="@+id/fragment_settings__et_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__et_width"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__tv_height"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__et_width" />
+
+        <TextView
+            android:id="@+id/fragment_settings__tv_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/width_text"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__et_width"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__et_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__et_width"
+            android:layout_marginStart="50dp"/>
+
+        <EditText
+            android:id="@+id/fragment_settings__et_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__tv_height"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__tv_width"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings__tv_address" />
+
+        <TextView
+            android:id="@+id/fragment_settings__tv_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_text"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings__et_width"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_settings__et_height"
+            app:layout_constraintStart_toEndOf="@+id/fragment_settings__et_width"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings__et_height"
+            android:layout_marginStart="30dp"/>
+
+        <TextView
+            android:id="@+id/fragment_settings__tv_brightness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/brightness_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragment_settings__et_brightness"
+            app:layout_constraintEnd_toStartOf="@id/fragment_settings__et_brightness"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_settings__et_brightness"
+            android:layout_marginStart="120dp"/>
+
+        <EditText
+            android:id="@+id/fragment_settings__et_brightness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:maxLength="3"
+            app:layout_constraintStart_toEndOf="@id/fragment_settings__tv_brightness"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__et_width"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="120dp"/>
+
+        <Button
+            android:id="@+id/fragment_settings__btn_save"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/save_text"
             app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__et_brightness"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:strokeColor="@color/gray_200"
-            app:strokeWidth="@dimen/stroke_width"
-            style="@style/button" />
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <Button
+            android:id="@+id/fragment_settings__btn_disconnect"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/disconnect_bt"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/item_queue__tv_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Какое-то событие очень очень длинное, что не помещается"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/item_queue__ib_delete"
+        app:layout_constraintTop_toTopOf="@id/item_queue__ib_delete"
+        app:layout_constraintBottom_toBottomOf="@id/item_queue__ib_delete"
+        android:layout_marginStart="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        style="@style/queue_item_text"/>
+
+    <ImageButton
+        android:id="@+id/item_queue__ib_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/item_queue__tv_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="10dp"
+        android:background="@color/white"
+        android:src="@drawable/ic_delete_light_24dp"/>
+
+    <View
+        android:id="@+id/item_queue__divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_queue__ib_delete"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

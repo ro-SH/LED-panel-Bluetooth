@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/dialog_queue_edit__tv_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
+        style="@style/queue_item_text"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+    
+    <ImageView
+        android:id="@+id/dialog_queue_edit__iv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dialog_queue_edit__tv_header"
+        app:layout_constraintTop_toTopOf="@id/dialog_queue_edit__et_time"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_queue_edit__et_time"
+        android:src="@drawable/ic_time_light_24dp"/>
+    
+    <EditText
+        android:id="@+id/dialog_queue_edit__et_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/edit_text_style"
+        android:autofillHints="time"
+        android:ems="10"
+        android:hint="@string/time_text"
+        android:inputType="time"
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__guideline_vertical"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__guideline_horizontal"/>
+
+    <ImageView
+        android:id="@+id/edit_queue_dialog__iv_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_item_light_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__et_item"
+        android:layout_marginStart="25dp"
+        app:layout_constraintBottom_toBottomOf="@id/edit_queue_dialog__et_item"/>
+
+    <EditText
+        android:id="@+id/edit_queue_dialog__et_item"
+        style="@style/edit_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="text"
+        android:ems="10"
+        android:hint="@string/item_text"
+        android:inputType="textLongMessage"
+        app:layout_constraintStart_toStartOf="@id/dialog_queue_edit__guideline_vertical"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__et_time" />
+
+    <Button
+        android:id="@+id/dialog_queue_edit__btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_queue_dialog__et_item"
+        android:layout_marginTop="24dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/dialog_queue_edit__guideline_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="72dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/dialog_queue_edit__guideline_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="75dp" />
+
+    <Space
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__et_time"
+        app:layout_constraintTop_toTopOf="@id/edit_queue_dialog__et_item"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        app:layout_constraintStart_toEndOf="@id/dialog_queue_edit__btn_edit"
+        app:layout_constraintTop_toBottomOf="@id/dialog_queue_edit__btn_edit"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

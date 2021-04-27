@@ -1,15 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.draw.DrawFragment">
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/fragment_draw__cv_canvas"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintDimensionRatio="1:4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="24dp">
+
+            <LinearLayout
+                android:id="@+id/fragment_draw__canvas_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Drawing" />
+            android:id="@+id/fragment_settings__tv_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Mode: Draw"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"/>
 
-    </FrameLayout>
+        <Button
+            android:id="@+id/fragment_draw__btn_color"
+            style="@style/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/fragment_settings__tv_mode"
+            app:layout_constraintStart_toStartOf="@id/fragment_draw__cv_canvas"
+            app:layout_constraintEnd_toEndOf="@id/fragment_draw__cv_canvas"
+            android:layout_marginTop="8dp"
+            android:text="@string/pick_color_text"
+            app:cornerRadius="@dimen/button_corner_radius"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="@dimen/stroke_width" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_draw"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__ib_fill"
+            app:layout_constraintStart_toStartOf="@+id/fragment_draw__ib_erase"
+            app:layout_constraintEnd_toEndOf="@id/fragment_draw__ib_erase"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__ib_fill" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_erase"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_draw__ib_clear"
+            app:layout_constraintStart_toStartOf="@id/fragment_draw__start_guideline"
+            app:layout_constraintTop_toTopOf="@+id/fragment_draw__ib_clear" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_fill"
+            app:layout_constraintEnd_toStartOf="@+id/fragment_draw__end_guideline"
+            app:layout_constraintTop_toBottomOf="@id/fragment_draw__btn_color" />
+
+        <ImageButton
+            android:id="@+id/fragment_draw__ib_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/fragment_draw__ib_fill"
+            app:layout_constraintTop_toBottomOf="@id/fragment_draw__ib_fill"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_clear"
+            android:background="@color/white"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/fragment_draw__start_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="90dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/fragment_draw__end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="100dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

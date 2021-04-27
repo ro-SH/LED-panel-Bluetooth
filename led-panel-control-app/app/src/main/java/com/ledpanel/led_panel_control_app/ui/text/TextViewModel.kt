@@ -1,12 +1,14 @@
 package com.ledpanel.led_panel_control_app.ui.text
 
 import android.graphics.Color
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class TextViewModel() : ViewModel() {
+/**
+ *  View Model for TextFragment
+ */
+class TextViewModel : ViewModel() {
 
     // Current Color Int
     private val _color = MutableLiveData<Int>()
@@ -26,10 +28,12 @@ class TextViewModel() : ViewModel() {
     val speed: LiveData<Double>
         get() = _speed
 
+    // Text Visibility
     private val _textEditVisible = MutableLiveData<Boolean>()
     val textEditVisible: LiveData<Boolean>
         get() = _textEditVisible
 
+    // Speed Slider Visibility
     private val _speedSliderVisible = MutableLiveData<Boolean>()
     val speedSliderVisible: LiveData<Boolean>
         get() = _speedSliderVisible
@@ -43,37 +47,43 @@ class TextViewModel() : ViewModel() {
         setFieldsVisibility()
     }
 
-    // Sets Type for display
+    /**
+     *  Change String type
+     *  @param newType Type ID
+     */
     fun setType(newType: Int) {
         _type.value = newType
         setFieldsVisibility()
     }
 
+    /**
+     *  Change fields visibility based on current type
+     */
     private fun setFieldsVisibility() {
-        _textEditVisible.value = when(_type.value) {
+        _textEditVisible.value = when (_type.value) {
             2 -> false
             else -> true
         }
 
-        _speedSliderVisible.value = when(_type.value) {
+        _speedSliderVisible.value = when (_type.value) {
             1 -> true
             else -> false
         }
     }
 
-    // Sets Color for display
+    /**
+     *  Change string color for display
+     *  @param newColor New color for String
+     */
     fun setColor(newColor: Int) {
         _color.value = newColor
     }
 
-    // Sets Speed for display
+    /**
+     *  Change display speed
+     *  @param newSpeed New String speed
+     */
     fun setSpeed(newSpeed: Float) {
         _speed.value = newSpeed.toDouble()
-    }
-
-    // Transfer Data to Panel
-    fun onDisplayClick() {
-        Log.i("TextViewModel", "type ${type.value}")
-
     }
 }
